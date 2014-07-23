@@ -1,0 +1,53 @@
+Install KDE and XFCE GUI:
+
+yum groupinstall "KDE desktop" "X Window System" "Fonts"
+
+or 
+
+yum install @kde-desktop
+
+yum -y groupinstall Xfce yum -y install xorg-x11-fonts-Type1 xorg-x11-fonts-misc
+
+======================================================================================================
+Change Desktop from Gnome to Kde
+
+Open or create /etc/sysconfig/desktop file:
+	# vi /etc/sysconfig/desktop
+
+Set DESKTOP variable to kde:
+	DESKTOP="KDE"
+	DISPLAYMANAGER="KDE"
+
+Save and close the file.
+
+Now kde will be used for all users as desktop system. 
+You can also accomplish this on a per-user basis by using the desktop switcher application from the extra preferences menu, or just type the command:
+	$ switchdesk kde
+
+Tip:
+
+If your default login screen is Gnome and you want to log into the KDE desktop without setting it as default,
+what you simply need to do is enter your username, this will auto display the language and desktop session options at the bottom of the screen. 
+Select the desired desktop session and login
+
+****************************************************************
+my desktop file:
+
+# Set DESKTOP variable to [a] GNOME [b] KDE [c] XFCE:
+	DESKTOP="GNOME"
+	DISPLAYMANAGER="GNOME"
+	DESKTOP="KDE"
+	DISPLAYMANAGER="KDE"
+	DESKTOP="XFCE"
+	DISPLAYMANAGER="XFCE"
+
+****************************************************************
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+rpm -q qemu-kvm virt-manager virt-viewer python-virtinst
+
+yum install qemu-kvm virt-manager virt-viewer python-virtinst
+
+yum groupinstall 'Virtualization'
+

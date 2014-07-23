@@ -1,0 +1,6 @@
+install skype on fedora 19:
+
+$ wget http://download.skype.com/linux/skype-4.2.0.11-fedora.i586.rpm
+
+# yum install skype-4.2.0.11-fedora.i586.rpm
+

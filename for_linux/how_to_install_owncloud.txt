@@ -1,0 +1,44 @@
+﻿
+*** ownCloud ***
+
+server install:
+
+For Fedora 19 run the following as root:
+
+        # cd /etc/yum.repos.d/
+        # wget http://download.opensuse.org/repositories/isv:ownCloud:community/Fedora_19/isv:ownCloud:community.repo
+        # yum install owncloud
+
+
+For Fedora 20 run the following as root:
+
+        # cd /etc/yum.repos.d/
+        # wget http://download.opensuse.org/repositories/isv:ownCloud:community/Fedora_20/isv:ownCloud:community.repo
+        # yum install owncloud
+
+
+For CentOS CentOS-6 run the following as root:
+
+        # cd /etc/yum.repos.d/
+        # wget http://download.opensuse.org/repositories/isv:ownCloud:community/CentOS_CentOS-6/isv:ownCloud:community.repo
+        # yum install owncloud
+
+On Server installed files located at -> /var/www/html/owncloud/
+
+
+SOME INFO WEBS:
+
+http://doc.owncloud.org/server/6.0/admin_manual/#configuration
+https://forum.owncloud.org/viewtopic.php?f=26&t=20860
+
+http://www.tecmint.com/install-owncloud-to-create-personal-storage-in-linux/
+http://www.unixmen.com/setup-your-personal-cloud-server-in-minutes-using-owncloud/
+http://blog.lowsnr.net/2014/01/14/owncloud-part1-the-server/
+https://www.digitalocean.com/community/articles/how-to-install-owncloud-and-configure-owncloud-apps-on-an-ubuntu-12-04-vps
+http://4nzx.blogspot.com/2012/11/installing-owncloud-on-ubuntu-server.html
+http://www.cloudservers.com/how-to-install-owncloud-on-your-cloudservers-ubuntu-vps-with-ssl/
+
+
+
+
+

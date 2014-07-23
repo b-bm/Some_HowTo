@@ -1,0 +1,160 @@
+How to install skype on CentOS 6.5:
+
+var.1.
+
+1. Skype on CentOS-6
+
+For both CentOS i686 and x86_64, install the yum configuration file for epel. 
+If you haven't already enabled it (it's required to install qtwebkit and qt-mobility):
+
+  [root@host]# yum install http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+
+Then, install the 32-bit versions of qtwebkit and webkitgtk:
+
+  [root@host]# yum install qtwebkit.i686 webkitgtk.i686
+
+Confirm that you want to install the GPG key for epel when prompted.
+If you hadn't enabled epel previously, it's recommended that you delete its yum configuration file:
+
+  [root@host]# yum remove epel-release
+
+If you want to continue using epel, see the information about Available Repositories for CentOS and yum-plugin-priorities.
+If you're using CentOS i686, proceed to the next section. If you're using CentOS x86_64, continue as follows.
+
+Install the necessary 32-bit packages:
+
+  [root@host]# yum install glibc.i686 alsa-lib.i686 libXv.i686 libXScrnSaver.i686 qt.i686 gtk2-engines.i686 \
+  PackageKit-gtk-module.i686 libcanberra.i686 libcanberra-gtk2.i686
+
+Some users have reported that they must also install the following packages for sound to work:
+
+  [root@host]# yum install pulseaudio-libs.i686 alsa-plugins-pulseaudio.i686
+
+Except for qtwebkit and qt-mobility, all these packages are in the Base and Updates repositories, which are enabled by default.
+
+2. Installing Skype
+
+Installing to /opt (modify as desired):
+
+  [root@host]# cd /tmp
+  [root@host]# wget http://download.skype.com/linux/skype-4.2.0.11.tar.bz2 # replace with new version file!
+  [root@host]# cd /opt
+  [root@host]# tar xjvf /tmp/skype-4.2.0.11.tar.bz2
+  [root@host]# rm /tmp/skype-4.2.0.11.tar.bz2
+  [root@host]# ln -s skype-4.2.0.11 skype
+
+NOTE:
+You need to replace the version number to match the one downloaded. At the time of writing (May 2013), the latest version is 4.2.0.11.
+
+Set up some symlinks (the first is required for sound to work; the second is optional).
+
+  [root@host]# ln -s /opt/skype /usr/share/skype
+  [root@host]# ln -s /opt/skype/skype /usr/bin/skype
+
+Note: Use "Sound Preferences" to select the correct input/output audio devices.
+
+===================================================================================================================================================
+
+var.2.
+
+Step 1: Install Required Packages
+First install all the required packages for proper functioning of skype. 
+All the packages are available under yum repositories, so simply run the below command.
+
+  # yum install libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 qtwebkit.i686 alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 zlib.i686 
+
+Step 2: Download and Extract Skype Source
+Download latest Skype source code using following command and extract it in /usr/src/ directory. 
+You may change this location as per your requirement.
+
+  # cd /usr/src
+  # wget http://www.skype.com/go/getskype-linux-dynamic
+  # tar xjf skype-4.3.0.37.tar.bz2
+  # mv skype-4.3.0.37 skype 
+
+NOTE:
+At the writing time of this article skype available archive file is skype-4.3.0.37.tar.bz2, It may you get different file name with newer upgrade available.
+
+Step 3: Create Skype Launch Script
+We need to create scrip to launch skype using command line. 
+Create a new file /usr/bin/skype and add following content.
+
+  # vim /usr/bin/skype
+
+  #!/bin/sh
+  export SKYPE_HOME="/usr/src/skype"
+  $SKYPE_HOME/skype --resources=$SKYPE_HOME $*
+
+Make this script executable using chmod command.
+
+  # chmod 755 /usr/bin/skype
+
+Step 4: Setup Required files
+We need to create symbolic links of required files in system folder
+
+  # ln -s /usr/src/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
+  # ln -s /usr/src/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
+  # ln -s /usr/src/skype/skype.desktop /usr/share/applications/skype.desktop
+
+Also copy following directories content to system directories.
+
+  # cp /usr/src/skype/sounds/* /usr/share/sounds/
+  # cp /usr/src/skype/lang/* /usr/share/lang/
+
+Step 5: Launch Skype using Command line
+Use skype command to launch Skype from command line and accept terms and conditions for first time.
+
+  # skype 
+
+===================================================================================================================================================
+
+var.3.
+
+1. Install Needed Dependencies
+
+  # yum install alsa-lib.i686 fontconfig.i686 freetype.i686 \
+  glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 \
+  libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 \
+  pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686
+
+
+Download Skype 
+## Skype 4.0 Static for CentOS / Red Hat (RHEL) / Scientific Linux (SL) ##
+  # wget http://download.skype.com/linux/skype_static-4.0.0.8.tar.bz2
+
+Extract Skype
+
+  # mkdir /opt/skype
+
+## Extract Skype 4.0 on CentOS / Red Hat (RHEL) / Scientific Linux (SL) ##
+  # tar xvf skype_static* -C /opt/skype --strip-components=1
+
+Create libtiff.so.4 link on CentOS / Red Hat (RHEL) / Scientific Linux (SL)
+
+  # cd /usr/lib
+  # ln -s libtiff.so.3 /usr/lib/libtiff.so.4
+
+Create Launcher, Link icons, lang and sounds
+
+  # ln -s /opt/skype/skype.desktop /usr/share/applications/skype.desktop
+  # ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
+  # ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
+ 
+  # touch /usr/bin/skype
+  # chmod 755 /usr/bin/skype
+
+Open /usr/bin/skype with text editor and add following content:
+
+  #!/bin/sh
+  export SKYPE_HOME="/opt/skype"
+  
+  $SKYPE_HOME/skype --resources=$SKYPE_HOME $*
+
+2. Use Skype - Start Skype
+From command line use skype command
+
+  # skype
+
+===================================================================================================================================================
+
+

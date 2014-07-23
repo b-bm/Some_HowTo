@@ -1,0 +1,39 @@
+http://en.support.wordpress.com/code/posting-source-code/
+
+To accomplish the above, just wrap your code in these tags:
+
+[code language="css"]
+your code here
+[/code]
+
+The language (or lang) parameter controls how the code is syntax highlighted. The following languages are supported:
+
+    actionscript3
+    bash
+    clojure
+    coldfusion
+    cpp
+    csharp
+    css
+    delphi
+    erlang
+    fsharp
+    diff
+    groovy
+    html
+    javascript
+    java
+    javafx
+    matlab (keywords only)
+    objc
+    perl
+    php
+    text
+    powershell
+    python
+    r
+    ruby
+    scala
+    sql
+    vb
+    xml

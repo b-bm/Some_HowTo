@@ -1,0 +1,8 @@
+﻿http://www.linux-kvm.org/page/Main_Page
+
+https://fedoraproject.org/wiki/Getting_started_with_virtualization?rd=Virtualization_Quick_Start#Using_virtualization_on_Fedora
+
+http://www.server-world.info/en/note?os=Fedora_19&p=kvm
+
+http://www.techotopia.com/index.php/Installing_and_Configuring_Fedora_KVM_Virtualization
+

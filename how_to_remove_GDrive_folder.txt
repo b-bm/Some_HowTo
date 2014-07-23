@@ -1,0 +1,11 @@
+For Windows, please try the following:
+
+    Right-click open the folder properties for the 'Google Drive' folder.
+    Go to Security. (enable this in file sharing settings if you do not see it. It is only available to Administrator accounts)
+    Grant Full Permissions to both your User Account and System. 
+    Go to Advanced.
+    Check the option for Inherit from parent the permission entries that apply to child objects
+    Apply/Save
+
+You should now be able to delete the 'Google Drive' folder.
+

@@ -1,0 +1,15 @@
+﻿<<< HOW TO ACCESS Linux MACHINE FROM WINDOWS >>>
+
+http://www.control-escape.com/linux/lx-samba.html
+http://www.cyberciti.biz/faq/access-linux-from-windows-xp-system/
+http://www.tightvnc.com/download.html
+
+http://www.codeproject.com/Articles/497728/HowplustoplusUseplusSSHplustoplusAccessplusaplusLi
+
+
+<<< HOW TO ACCESS Windows MACHINE FROM LINUX >>>
+
+http://www.reallylinux.com/docs/basicnetworking.shtml
+http://superuser.com/questions/385780/linux-browsing-windows-file-shares-with-a-tree-view
+http://www.ibm.com/developerworks/linux/library/l-linuxdesktop/
+

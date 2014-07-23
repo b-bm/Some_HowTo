@@ -1,0 +1,98 @@
+http://docs.fedoraproject.org/en-US/Fedora/14/html/Deployment_Guide/s2-ssh-configuration-sshd.html
+
+# to convert key from Windows use this: 
+# $ ssh-keygen -i -f /some_dir/identity.pub >> ~/.ssh/authorized_keys
+
+SSH config:
+
+$ service sshd status
+
+# service sshd start
+
+# chkconfig sshd on  -> the daemon start automatically at the boot time and enable the service for all runlevels 
+
+set this off:
+
+# chkconfig telnet off
+# chkconfig rsh off
+# chkconfig rlogin off
+# chkconfig vsftpd off
+
+# vim /etc/ssh/sshd_config
+
+$ ssh-keygen -t rsa 8192 or dsa 1024 or ecdsa 512
+
+$ chmod 755 ~/.ssh
+
+Copy the content of ~/.ssh/id_rsa.pub into the ~/.ssh/authorized_keys on the machine to which you want to connect, appending it to its end if the file already exists. 
+
+$ chmod 644 ~/.ssh/authorized_keys
+
+===========================================================================
+
+# service sshd status
+
+# service sshd start
+
+# service sshd restart
+
+# service sshd stop
+
+If you'd like the SSH server to start up when the system starts up, you can do so via the "chkconfig" command. 
+The following command lists the runlevels that the sshd daemon will be started at. 
+
+# chkconfig --list sshd
+
+The following command sets the runlevels of the sshd daemon to 2, 3, 4, and 5
+
+# chkconfig --level 2345 sshd on
+
+ssh-keygen [-q] [-b bits] -t type [-N new_passphrase] [-f output_keyfile]
+
+ssh-keygen -q -b 2048 -t rsa -N @_13B_80! -f ssh_host_rsa_key
+
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_key
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key 
+ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_key
+ssh-keygen -b 8192 -t rsa -f /etc/ssh/ssh_host_rsa_key
+
+ssh-keygen -b 8192 -t rsa -C "plasidity.fe01" -f /etc/ssh/ssh_host_rsa_key
+
+ssh-keygen -b 1024 -t dsa -f /etc/ssh/ssh_host_dsa_key
+
+service sshd reload
+service sshd start
+
+ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key -> proverqva finger printa na kliucha !!!
+
+===================================
+man ssh-keygen: 
+
+NAME
+     ssh-keygen — authentication key generation, management and conversion
+
+SYNOPSIS
+     ssh-keygen [-q] [-b bits] -t type [-N new_passphrase] [-C comment] [-f output_keyfile]
+     ssh-keygen -p [-P old_passphrase] [-N new_passphrase] [-f keyfile]
+     ssh-keygen -i [-m key_format] [-f input_keyfile]
+     ssh-keygen -e [-m key_format] [-f input_keyfile]
+     ssh-keygen -y [-f input_keyfile]
+     ssh-keygen -c [-P passphrase] [-C comment] [-f keyfile]
+     ssh-keygen -l [-f input_keyfile]
+     ssh-keygen -B [-f input_keyfile]
+     ssh-keygen -D pkcs11
+     ssh-keygen -F hostname [-f known_hosts_file] [-l]
+     ssh-keygen -H [-f known_hosts_file]
+     ssh-keygen -R hostname [-f known_hosts_file]
+     ssh-keygen -r hostname [-f input_keyfile] [-g]
+     ssh-keygen -G output_file [-v] [-b bits] [-M memory] [-S start_point]
+     ssh-keygen -T output_file -f input_file [-v] [-a num_trials] [-J num_lines] [-j start_line]
+                [-K checkpt] [-W generator]
+     ssh-keygen -s ca_key -I certificate_identity [-h] [-n principals] [-O option] [-V validity_interval]
+                [-z serial_number] file ...
+     ssh-keygen -L [-f input_keyfile]
+     ssh-keygen -A
+     ssh-keygen -k -f krl_file [-u] [-s ca_public] [-z version_number] file ...
+     ssh-keygen -Q -f krl_file file ...

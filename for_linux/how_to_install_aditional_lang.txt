@@ -1,0 +1,22 @@
+How to Install/Remove Language Support
+
+To install any language support in your Fedora Desktop you need to use following command
+
+  yum groupinstall <language_name>-support
+  yum langinstall <locale_code>
+
+To remove any language support in your Fedora Desktop you need to use following command
+
+  yum groupremove <language_name>-support
+  yum langremove <locale_code>
+
+
+  yum groupinstall <Bulgarian-Български>-support
+  yum langinstall <bg_BG>
+  
+  
+  
+  
+
+https://fedoraproject.org/wiki/I18N/Language_Support_Using_Yum
+

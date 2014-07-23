@@ -1,0 +1,149 @@
+client:
+
+11:16:52	Status:	Connecting to 85.187.248.24:21...
+11:16:52	Status:	Connection established, waiting for welcome message...
+11:16:52	Response:	220 FTP Server ready.
+11:16:52	Command:	AUTH TLS
+11:16:52	Response:	234 AUTH TLS successful
+11:16:52	Status:	Initializing TLS...
+11:16:53	Status:	Verifying certificate...
+11:17:03	Command:	USER ted
+11:17:03	Status:	TLS/SSL connection established.
+11:17:03	Response:	331 Password required for ted
+11:17:03	Command:	PASS *******************
+11:17:03	Error:	GnuTLS error -54: Error in the pull function.
+11:17:03	Error:	Could not connect to server
+
+13:30:58	Status:	Connecting to 85.187.248.24:21...
+13:30:58	Status:	Connection established, waiting for welcome message...
+13:30:58	Response:	220 FTP Server ready.
+13:30:58	Command:	AUTH TLS
+13:30:58	Response:	234 AUTH TLS successful
+13:30:58	Status:	Initializing TLS...
+13:30:58	Status:	Verifying certificate...
+13:31:02	Command:	USER ted
+13:31:02	Status:	TLS/SSL connection established.
+13:31:02	Response:	331 Password required for ted
+13:31:02	Command:	PASS *******************
+13:31:02	Response:	530 Login incorrect.
+13:31:02	Error:	Critical error
+13:31:02	Error:	Could not connect to server
+
+
+
+
+
+client log:
+
+
+
+server.log:
+
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:20:50:35 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:20:50:41 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:20:50:43 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:47 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:47 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:47 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:58 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:58 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:15:58 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:38:14 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:38:21 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:38:22 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:39:49 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:39:49 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:39:49 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:40:20 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:40:20 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:40:20 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:41:03 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:41:03 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:41:03 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:53:04 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:53:04 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:53:04 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:55:00 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:55:00 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:55:00 +0300] "PASS (hidden)" 530 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:56:05 +0300] "AUTH TLS" 234 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:56:06 +0300] "USER tedftp" 331 -
+::ffff:87.119.67.173 UNKNOWN nobody [21/Jul/2014:21:56:06 +0300] "PASS (hidden)" 530 -
+
+server tls log:
+
+Jul 21 18:53:08 mod_tls/2.4.2[4596]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 18:53:09 mod_tls/2.4.2[4596]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 18:53:09 mod_tls/2.4.2[4596]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 18:53:26 mod_tls/2.4.2[4600]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 18:54:02 mod_tls/2.4.2[4600]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 18:54:50 mod_tls/2.4.2[4600]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 18:59:36 mod_tls/2.4.2[4715]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 18:59:36 mod_tls/2.4.2[4715]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 18:59:36 mod_tls/2.4.2[4715]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:11:32 mod_tls/2.4.2[4911]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:11:32 mod_tls/2.4.2[4911]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:11:33 mod_tls/2.4.2[4911]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:25:49 mod_tls/2.4.2[5031]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:25:49 mod_tls/2.4.2[5031]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:25:49 mod_tls/2.4.2[5031]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:26:47 mod_tls/2.4.2[5034]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:26:47 mod_tls/2.4.2[5034]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:26:47 mod_tls/2.4.2[5034]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:33:13 mod_tls/2.4.2[5065]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:33:13 mod_tls/2.4.2[5065]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:33:13 mod_tls/2.4.2[5065]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:33:47 mod_tls/2.4.2[5066]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:33:53 mod_tls/2.4.2[5066]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:34:19 mod_tls/2.4.2[5066]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:37:29 mod_tls/2.4.2[5119]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:37:29 mod_tls/2.4.2[5119]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:37:30 mod_tls/2.4.2[5119]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:39:25 mod_tls/2.4.2[5167]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:39:25 mod_tls/2.4.2[5167]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:39:25 mod_tls/2.4.2[5167]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:39:52 mod_tls/2.4.2[5185]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:39:52 mod_tls/2.4.2[5185]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:39:52 mod_tls/2.4.2[5185]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 19:48:08 mod_tls/2.4.2[5235]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 19:48:08 mod_tls/2.4.2[5235]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 19:48:08 mod_tls/2.4.2[5235]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 20:16:31 mod_tls/2.4.2[3281]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 20:16:32 mod_tls/2.4.2[3281]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 20:16:38 mod_tls/2.4.2[3281]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 20:36:32 mod_tls/2.4.2[3372]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 20:36:32 mod_tls/2.4.2[3372]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 20:36:32 mod_tls/2.4.2[3372]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 20:36:37 mod_tls/2.4.2[3373]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 20:36:37 mod_tls/2.4.2[3373]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 20:36:38 mod_tls/2.4.2[3373]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 20:50:34 mod_tls/2.4.2[3477]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 20:50:34 mod_tls/2.4.2[3477]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 20:50:35 mod_tls/2.4.2[3477]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:15:47 mod_tls/2.4.2[3628]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:15:47 mod_tls/2.4.2[3628]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:15:47 mod_tls/2.4.2[3628]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:15:56 mod_tls/2.4.2[3629]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:15:56 mod_tls/2.4.2[3629]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:15:58 mod_tls/2.4.2[3629]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:38:14 mod_tls/2.4.2[3738]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:38:14 mod_tls/2.4.2[3738]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:38:14 mod_tls/2.4.2[3738]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:39:48 mod_tls/2.4.2[3790]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:39:49 mod_tls/2.4.2[3790]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:39:49 mod_tls/2.4.2[3790]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:39:59 mod_tls/2.4.2[3791]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:39:59 mod_tls/2.4.2[3791]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:40:20 mod_tls/2.4.2[3791]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:40:56 mod_tls/2.4.2[3797]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:40:56 mod_tls/2.4.2[3797]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:41:03 mod_tls/2.4.2[3797]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:53:02 mod_tls/2.4.2[3879]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:53:02 mod_tls/2.4.2[3879]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:53:04 mod_tls/2.4.2[3879]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:55:00 mod_tls/2.4.2[3902]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:55:00 mod_tls/2.4.2[3902]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:55:00 mod_tls/2.4.2[3902]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)
+Jul 21 21:56:02 mod_tls/2.4.2[3937]: using default OpenSSL verification locations (see $SSL_CERT_DIR environment variable)
+Jul 21 21:56:05 mod_tls/2.4.2[3937]: TLS/TLS-C requested, starting TLS handshake
+Jul 21 21:56:05 mod_tls/2.4.2[3937]: TLSv1/SSLv3 connection accepted, using cipher AES256-GCM-SHA384 (256 bits)

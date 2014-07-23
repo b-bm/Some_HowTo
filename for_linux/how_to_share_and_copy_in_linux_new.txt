@@ -1,0 +1,140 @@
+
+my paths:
+
+  smb://borntokill/SharedDocs/ 
+  //192.168.1.103/SharedDocs/
+
+  /home/schetovoditel/Downloads/WindowsShare/
+
+
+copy file:
+
+  cp list.txt -t 
+
+how to:
+
+  sudo mount.cifs //192.168.1.103/SharedDocs /home/schetovoditel/Downloads/WindowsShare -o user=schetovoditel
+  
+  sudo mount.cifs –> This is just the mount command, set to mount a CIFS (SMB) share
+
+some info:
+
+-> //Windows-PC/Share – This is the full path to the shared folder.
+
+-> /home/geek/Desktop/Windows-Share – This is where we’d like the share to be mounted.
+
+-> -o user=geek – This is the Windows username that we are using to access the shared folder.
+
+-------------------------------
+sudo vi /etc/samba/smb.conf
+
+Scroll down to the end of the file and add these lines:
+
+    [<folder_name>]
+    path = /home/<user_name>/<folder_name>
+    available = yes
+    valid users = <user_name>
+    read only = no
+    browsable = yes
+    public = yes
+    writable = yes
+
+    [<Downloads>]
+    path = /home/schetovoditel/Downloads
+    available = yes
+    valid users = <schetovoditel>
+    read only = no
+    browsable = yes
+    public = yes
+    writable = yes
+    
+\\IP-ADDRESS\SHARE-NAME
+
+-------------------------------
+Този вар. не е добър за мен -> може само да се листва, пише само root !!!
+
+Mount Windows Share from Linux ( Permanent, Available on re-boot).
+
+By Performing this Section you will able to mount windows shared directory from Linux on Permanent Basis, Even if you re-boot then it will be available, But Of-Course Windows share must available.
+
+First of all take backup of /etc/fstab file so if anything goes wrong you can always recover.
+
+=>  To backup /etc/fstab file execute following command.
+
+  root@tejasbarot-linux-ahmedabad:~ #cp /etc/fstab /etc/fstab.original
+
+=> Open /etc/fstab with your Favourite text editor. I am using VIM as my editor.
+
+  root@tejasbarot-linux-ahmedabad:~ # vim /etc/fstab
+
+=> Now Insert Following entry
+
+  //<windows-ip-address>/<share-name> /<local/mount/point> cifs username=username,password=password 0 0
+
+For Example ( Entry Should look like below ) :-
+
+  //192.168.1.3/share /mnt cifs username=tejasbarot,password=linuxahmedabad 0 0
+
+Save and Exit from File. To save in VIM ( Press ESC and :wq and ENTER )
+
+=> To Test Your Entry is correct or not Execute following command :-
+
+  root@tejasbarot-linux-ahmedabad:~ # mount -a
+
+No Error should be there once you execute this command.
+
+=> Now You can Confirm by “df -h” 
+
+-------------------------------
+-------------------------------
+Този вар. е OK за мен !!!
+
+Mount Windows Share from Linux ( Permanent, Available on re-boot).
+By Performing this Section you will able to mount windows shared directory from Linux on Permanent Basis, Even if you re-boot then it will be available, But Of-Course Windows share must available.
+First of all take backup of /etc/fstab file so if anything goes wrong you can always recover.
+
+  To backup /etc/fstab file execute following command.
+
+  root@xxxx:~ #cp /etc/fstab /etc/fstab.original
+
+Mounting unprotected (guest) network folders:
+
+Edit your /etc/fstab file (with root privileges) to add this line:
+
+  //servername/sharename  /media/windowsshare  cifs  guest,uid=1000,iocharset=utf8  0  0
+  //192.168.1.103/SharedDocs /home/schetovoditel/Downloads/WindowsShare cifs  guest,uid=1001,iocharset=utf8  0  0
+  
+Where
+
+    -> guest indicates you don't need a password to access the share,
+
+    -> uid=1000 makes the Linux user specified by the id the owner of the mounted share, allowing them to rename files,
+    -> uid=1001 = schetovoditel
+    -> iocharset=utf8 allows access to files with names in non-English languages. 
+       This doesn't work with shares of devices like the Buffalo Tera Station, or Windows machines that export their shares using ISO8895-15.
+
+    If there is any space in the server path, you need to replace it by \040, for example //servername/My\040Documents 
+
+After you add the entry to /etc/fstab type:
+
+  sudo mount -a
+
+This will (re)mount all entries listed in /etc/fstab.
+Now You can Confirm by “df -h” command
+
+-------------------------------
+-------------------------------
+
+[root@Plasidity ~]# df -h
+Filesystem                  Size  Used Avail Use% Mounted on
+/dev/sda2                    35G  7.2G   26G  23% /
+devtmpfs                    494M     0  494M   0% /dev
+tmpfs                       498M   76K  498M   1% /dev/shm
+tmpfs                       498M  836K  497M   1% /run
+tmpfs                       498M     0  498M   0% /sys/fs/cgroup
+tmpfs                       498M   28K  498M   1% /tmp
+/dev/sda1                   485M   74M  386M  17% /boot
+//192.168.1.103/SharedDocs   75G   15G   60G  20% /home/schetovoditel/Downloads/WindowsShare
+
+
+

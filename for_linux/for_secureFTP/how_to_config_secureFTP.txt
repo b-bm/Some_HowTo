@@ -1,0 +1,1763 @@
+created users:
+- userproftpd / !Boian_ftp_1@ - UID:1000
+- useraz / !bobikenobi1@ - UID:1001  
+
+
+FTPS -> is a normal FTP server but using SSL encrytion.
+SFTP -> is a ftp kind of session over SSH (so everything is encrypted just like in SSH).
+
+-- GUI for PROFTPD -> http://mange.dynalias.org/linux/gproftpd
+
+-- PROFTPD INFO PAGES: 
+http://www.proftpd.org/
+http://www.proftpd.org/docs/modules/mod_auth_unix.html
+http://www.proftpd.org/docs/contrib/index.html
+http://www.proftpd.org/docs/contrib/ftpasswd.html
+http://www.castaglia.org/proftpd/
+http://linux-sxs.org/internet_serving/proftpd.html
+https://www.lisenet.com/2014/setting-up-proftpd-on-debian-wheezy-with-explicit-ftps-and-alternate-auth-file/
+
+-- INFO ABOUT PROFTPD CONF. AND OPENSSL - conf. and set up:
+
+1.
+	# mkdir /etc/proftpd/ssl   # macke this dir to put ssl certificates
+	# cd /etc/proftpd/ssl/
+	# openssl req -new -x509 -days 730 -nodes -out tls-rsa.pem -keyout tls-rsa-key.pem   # Now you have a certificate that will last 2 years.
+	# openssl req -new -x509 -days 730 -nodes -newkey rsa:9216 -out tls-rsa.pem -keyout tls-rsa-key.pem   # Now you have a certificate that will last 2 years and RSA 9216 bits.
+	# openssl req -new -x509 -days 730 -nodes -newkey rsa:6144 -out tls-rsa.pem -keyout tls-rsa-key.pem
+	# openssl req -new -x509 -days 730 -nodes -newkey rsa:8192 -out proftpd.cert.pem -keyout proftpd.key.pem
+	# openssl req -new -x509 -days 365 -nodes -out proftpd.cert.pem -keyout proftpd.key.pem
+	# openssl req -new -x509 -days 365 -nodes -out server.crt -keyout server.key
+
+2. The next thing to do is tell Proftpd about it and enable the mod_tls module so it all works.
+In your configuration file (/etc/proftpd.conf for me) add the following lines inside a pair of ifmodule tags (<IfModule mod_tls.c>:" and "</IfModule>).
+
+<IfModule mod_tls.c>
+    TLSEngine			on
+    TLSProtocol SSLv23
+    TLSRequired			on
+    TLSRSACertificateFile		/etc/proftpd/ssl/tls-rsa.pem
+    TLSRSACertificateKeyFile	/etc/proftpd/ssl/tls-rsa-key.pem
+    TLSCipherSuite		ALL:!ADH:!DES
+    TLSOptions			NoCertRequest
+    TLSVerifyClient		off
+    #TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
+    TLSLog			/var/log/proftpd/tls.log
+    <IfModule mod_tls_shmcache.c>
+	TLSSessionCache		shm:/file=/var/run/proftpd/sesscache
+    </IfModule>
+</IfModule>
+
+3. Create a new FTP user with UID of 1100 (not in use) (http://www.proftpd.org/docs/utils/ftpasswd.html):
+# ftpasswd --passwd --file=/etc/proftpd/auth/users.passwd --name=tedftp --home=/home/ted/MyCloud_Files --shell=/bin/false --uid=1100 --gid=1100
+
+NOTE:
+Read this for configuration
+https://www.lisenet.com/2014/setting-up-proftpd-on-debian-wheezy-with-explicit-ftps-and-alternate-auth-file
+
+4. Afterwards, just restart Proftpd and you will now have optional SSL when connecting to your FTP.
+
+	# /etc/rc.d/init.d/proftpd restart ; start ; stop
+	or
+	# /etc/init.d/proftpd restart ; start ; stop
+	or
+	# service proftpd restart ; start ; stop
+
+5. some commands:
+	# proftpd --configtest     # this make check of proftpd.conf configuration file
+	# chkconfig proftpd on     # Configure proftpd start at boot
+	# proftpd -vv              # this make check of configuration file, version and loaded modules
+	# proftpd -V               # this make check of configuration file, version, compiled and loaded modules 
+	
+6. Make changes to /etc/hosts file 
+need an entry with your primary IP address and hostname, such as:
+	x.y.z.q hostname.example.com
+
+Where x.y.z.q is your server's primary IP address, and hostname.example.com is your servers hostname and domain name.
+
+example:
+67.23.5.122 ns1.squirtyvision.com ns1
+That is, add it to the end of an existing line -- and that should hopefully do the trick!
+
+7. Some info about openssl configuration file (openssl.cnf)
+	/etc/pki/tls/openssl.cnf
+   
+NOTE:
+What this creates is know as "Explicit SSL" to most FTP clients. 
+It is better than Implicit because the SSL connection is established before the username is transmitted by the client. 
+With Implicit, the username is transmitted first. 
+Then, if it is a valid user the SSL connection begins so the password is transmitted over SSL. 
+To clarify, Explicit excrypts usernames and passwords, whereas, Implicit encrypts the password only. 
+Data and commands are encrypted by both.
+
+The differences are for performance mostly. If your server receives a lot of login attempts and you need SSL, I would use Implicit. 
+That way bad login names do not tax your server as much. Though if you don’t care and don’t see a lot of logins, use Explicit SSL.
+Explicit is better!
+
+8. Some info about User Authentication from -> http://www.proftpd.org/docs/howto/Authentication.html
+	AllowUser
+	Name
+	AllowUser -- User based allow rules
+	Synopsis:
+	AllowUser [ ["AND"|"OR"|"regex"] user-expression]
+Examples:
+# A regular expression AllowUser directive
+	AllowUser regex ^ftp
+
+# An AND-evaluated DenyUser directive
+	DenyUser AND system,test
+
+9. Normal users can't login, only anonymous?
+Check that the /etc/pam.d/ftp or proftpd file exists on the system and is configured as detailed in README.PAM
+Configuring PAM
+
+There is a README.Pam in the top directory of the ProFTPD install directory :
+
+    Redhat Linux
+
+    #%PAM-1.0
+    auth       required     /lib/security/pam_listfile.so item=user
+    sense=deny file=/etc/ftpusers onerr=succeed
+    auth       required     /lib/security/pam_pwdb.so shadow nullok
+    account    required     /lib/security/pam_pwdb.so
+    session    required     /lib/security/pam_pwdb.so
+              
+http://www.proftpd.org/docs/faq/linked/faq-ch7.html
+
+========================================================================================================================================
+### my2_proftpd.conf file: -> SUCCESS/SUCCEED used ### var.5. 
+
+# This is the ProFTPD configuration file
+# See: http://www.proftpd.org
+# See: http://www.proftpd.org/docs/howto/index.html
+# See: http://www.proftpd.org/docs/directives/linked/by-name.html
+# Server Config - config used for anything outside a <VirtualHost> or <Global> context
+
+ServerName 				"MY OWN SRV.L1"
+ServerIdent 			on "FTP Server ready."
+ServerAdmin 			root@localhost
+ServerType 				standalone
+DefaultServer 			on
+#MultilineRFC2228 		on
+#ShowSymlinks 			off
+#DefaultTransferMode 	binary
+
+TimeoutLogin 		120
+TimeoutIdle 		300
+TimeoutNoTransfer 	180
+TimeoutStalled 		300
+
+
+# Port 21 is the standard FTP port.
+#Port 7897
+Port 21
+
+# In some cases you have to specify passive ports range to by-pass
+# firewall limitations. Ephemeral ports can be used for that, but
+# feel free to use a more narrow range.  
+PassivePorts 6510 6525  
+
+# If your host was NATted, this option is useful in order to
+# allow passive tranfers to work. You have to use your public
+# address and opening the passive ports used on your firewall as well.
+MasqueradeAddress 1.2.3.4
+
+# This is useful for masquerading address with dynamic IPs:
+# refresh any configured MasqueradeAddress directives every 8 hours
+#<IfModule mod_dynmasq.c>
+# DynMasqRefresh 28800
+#</IfModule>
+
+# Use PAM (Pluggable Authentication Modules) to authenticate (default) and be authoritative
+# The AuthPAMConfig directive is used to specify the name of the service used when performing the PAM check
+# See: http://www.proftpd.org/docs/modules/mod_auth_pam.html 
+
+<IfModule mod_auth_pam.c>
+	AuthPAM   on
+	AuthPAMConfig   proftpd
+	AuthPAMOptions   NoTTY
+</IfModule>
+
+# It is important that mod_auth_pam appear before mod_auth_unix, and
+# that the asterisk ("*") appear after the name, not before.
+# The asterisk after a module name in the AuthOrder directive 
+# is what tells proftpd to treat that module's results as authoritative.
+#AuthOrder   mod_auth_unix.c
+AuthOrder   mod_auth_pam.c* mod_auth_unix.c
+
+# The PersistentPasswd directive controls how mod_auth_unix handles authentication,
+# user/group lookups, and user/group to name mapping.
+# See: http://www.proftpd.org/docs/modules/mod_auth_unix.html
+# If you use NIS/YP/LDAP you may need to disable PersistentPasswd
+PersistentPasswd   off
+
+# Don't do reverse DNS lookups (hangs on DNS problems)
+UseReverseDNS   off
+
+# Umask 022 is a good standard umask to prevent new dirs and files
+# from being group and world writable.
+Umask   022
+
+# To prevent DoS attacks, set the maximum number of child processes
+# to 20.  If you need to allow more than 20 concurrent connections
+# at once, simply increase this value.  Note that this ONLY works
+# in standalone mode; in inetd mode you should use an inetd server
+# that allows you to limit maximum number of processes per service
+# (such as xinetd)
+MaxInstances   8
+
+# Set the user and group under which the server will run.
+# Never ever run as root
+
+User   nobody
+Group  nobody
+
+# To really apply changes reload proftpd after modifications.
+AllowOverwrite on
+AuthAliasOnly on
+
+# Choose here the user alias you want !!!!
+# example: UserAlias user_name_for_login user_created_for_ftp_only
+UserAlias tedftp useraz
+
+<Limit LOGIN>
+	AllowUser tedftp
+	DenyALL
+</Limit>
+
+# Normally, we want files to be overwriteable.
+<Directory /home/MyCloud_Files>
+Umask 022 022
+AllowOverwrite on
+  <Limit All>
+	AllowAll
+  </Limit>
+</Directory>
+</IfModule>
+
+#<Directory /home/MyCloud_Files/*>
+#Umask 022 022
+#AllowOverwrite on
+#	<Limit READ RMD DELE>
+#		DenyAll
+#	</Limit>
+#
+#	<Limit STOR CWD MKD>
+#		AllowAll
+#	</Limit>
+#</Directory>
+
+# You can have a separate file from the regular /etc/passwd
+# The "mod_auth_file" module is compiled by default
+# See: http://www.proftpd.org/docs/modules/mod_auth_file.html 
+#AuthUserFile   /etc/proftpd/auth/users.passwd
+#AuthGroupFile  /etc/proftpd/auth/users.group
+
+# To cause every FTP user to be "jailed" (chrooted) into their home
+# directory, uncomment this line.
+#DefaultRoot   ~ !adm
+DefaultRoot   /home/MyCloud_Files
+DefaultRoot   ~
+
+# Define the log formats
+LogFormat     default "%h %l %u %t \"%r\" %s %b"
+LogFormat     auth "%v [%P] %h %t \"%r\" %s"
+LogFormat     write "%h %l %u %t \"%r\" %s %b"
+# If "WtmpLog" is "on" every loged user will record in /var/log/wtmp file
+# and if you write in console "w" command this ftp user will shown there. 
+WtmpLog   off
+
+# TLS (http://www.castaglia.org/proftpd/modules/mod_tls.html)
+<IfModule mod_tls.c>
+	TLSEngine 		on
+	TLSProtocol 	SSLv23
+	TLSRequired 	on
+	TLSRSACertificateFile 		/etc/proftpd/ssl/proftpd.cert.pem
+	TLSRSACertificateKeyFile 	/etc/proftpd/ssl/proftpd.key.pem
+	TLSCipherSuite 		ALL:!ADH:!DES
+	TLSOptions 			NoCertRequest
+	TLSVerifyClient 	off
+	#TLSRenegotiate 	ctrl 3600 data 512000 required off timeout 300
+	TLSLog 				/var/log/proftpd/tls.log
+	<IfModule mod_tls_shmcache.c>
+		TLSSessionCache 	shm:/file=/var/run/proftpd/sesscache
+	</IfModule>
+</IfModule>
+
+# Dynamic ban lists (http://www.proftpd.org/docs/contrib/mod_ban.html)
+# Enable this with PROFTPD_OPTIONS=-DDYNAMIC_BAN_LISTS in /etc/sysconfig/proftpd
+#<IfDefine DYNAMIC_BAN_LISTS>
+#  LoadModule			mod_ban.c
+#  BanEngine			on
+#  BanLog			/var/log/proftpd/ban.log
+#  BanTable			/var/run/proftpd/ban.tab
+#
+#  # If the same client reaches the MaxLoginAttempts limit 2 times
+#  # within 10 minutes, automatically add a ban for that client that
+#  # will expire after one hour.
+#  BanOnEvent			MaxLoginAttempts 2/00:10:00 01:00:00
+#
+#  # Allow the FTP admin to manually add/remove bans
+#  BanControlsACLs		all allow user ftpadm
+#</IfDefine>
+
+#######################################################################
+# Global Config                                                       #
+#######################################################################
+# Global Config - config common to Server Config and all virtual hosts
+<Global>
+
+# Display a message after a successful login
+	AccessGrantMsg 		/etc/proftpd/welcome.msg
+	#DisplayLogin 		/etc/proftpd/welcome.msg
+	AccessDenyMsg 		"404 Access for %u has been denied.
+# Record all logins
+	#ExtendedLog 		/var/log/proftpd/auth.log AUTH auth
+#
+# Paranoia logging level....
+	ExtendedLog 		/var/log/proftpd/paranoid.log ALL default
+#
+# Disable sendfile by default since it breaks displaying the download speeds in
+# ftptop and ftpwho
+	UseSendfile 		off
+#
+	RequireValidShell 	off
+# If you don't choose to use /etc/ftpusers file (set inside the users you want to ban)
+# set this option to "off"  
+	UseFtpUsers 		off 
+	RootLogin 			off   
+	MaxLoginAttempts 	3
+	MaxClients 			8
+	MaxClientsPerHost 	8
+	MaxClientsPerUser 	8
+	MaxHostsPerUser 	8
+#	
+	#DenyFilter 		\*.*/
+# Allow to restart a download  
+	AllowStoreRestart 		on
+	#AllowRetrieveRestart 	on
+	#AllowForeignAddress 	on
+	#DirFakeGroup 			on   ~ 
+	#DirFakeUser 			on   ~ 
+	#DirFakeMode 			0440 
+	#HiddenStor 			on
+  
+# Allow users to overwrite files and change permissions
+#AllowOverwrite   yes
+#<Limit ALL SITE_CHMOD>
+#  AllowAll
+#</Limit>
+
+# VALID LOGINS
+#<Limit LOGIN>
+#   AllowUser someUser
+#   DenyALL
+#</Limit>
+
+</Global>
+
+#######################################################################
+# SIMPE ANONYMOUS LOGIN                                               #
+#######################################################################
+#<Anonymous /home/MyCloud_Files>
+#AnonRequirePassword   on
+#AuthAliasOnly         on
+#AuthUsingAlias        on
+#RequireValidShell     off
+# The list of authorized users.
+# user/pass lookup is for each user, not password entry
+# of server uid ('nobody' in this example).
+#UserAlias             tedftp       useraz
+#<Limit ALL>
+#AllowAll
+#</Limit>
+#</Anonymous>
+
+# Dynamic Shared Object (DSO) loading
+# See README.DSO and howto/DSO.html for more details
+#
+# General database support (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql.c
+#
+# Support for base-64 or hex encoded MD5 and SHA1 passwords from SQL tables
+# (contrib/mod_sql_passwd.html)
+#   LoadModule mod_sql_passwd.c
+#
+# Mysql support (requires proftpd-mysql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_mysql.c
+#
+# Postgresql support (requires proftpd-postgresql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_postgres.c
+#
+# Quota support (http://www.proftpd.org/docs/contrib/mod_quotatab.html)
+#   LoadModule mod_quotatab.c
+#
+# File-specific "driver" for storing quota table information in files
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_file.html)
+#   LoadModule mod_quotatab_file.c
+#
+# SQL database "driver" for storing quota table information in SQL tables
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_sql.html)
+#   LoadModule mod_quotatab_sql.c
+#
+# LDAP support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/directives/linked/config_ref_mod_ldap.html)
+#   LoadModule mod_ldap.c
+#
+# LDAP quota support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_ldap.html)
+#   LoadModule mod_quotatab_ldap.c
+#
+# Support for authenticating users using the RADIUS protocol
+# (http://www.proftpd.org/docs/contrib/mod_radius.html)
+#   LoadModule mod_radius.c
+#
+# Retrieve quota limit table information from a RADIUS server
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_radius.html)
+#   LoadModule mod_quotatab_radius.c
+#
+# Administrative control actions for the ftpdctl program
+# (http://www.proftpd.org/docs/contrib/mod_ctrls_admin.html)
+#   LoadModule mod_ctrls_admin.c
+#
+# Execute external programs or scripts at various points in the process
+# of handling FTP commands
+# (http://www.castaglia.org/proftpd/modules/mod_exec.html)
+#   LoadModule mod_exec.c
+#
+# Support for POSIX ACLs
+# (http://www.proftpd.org/docs/modules/mod_facl.html)
+#   LoadModule mod_facl.c
+#
+# Support for using the GeoIP library to look up geographical information on
+# the connecting client and using that to set access controls for the server
+# (http://www.castaglia.org/proftpd/modules/mod_geoip.html)
+#   LoadModule mod_geoip.c
+#
+# Configure server availability based on system load
+# (http://www.proftpd.org/docs/contrib/mod_load.html)
+#   LoadModule mod_load.c
+#
+# Limit downloads to a multiple of upload volume (see README.ratio)
+#   LoadModule mod_ratio.c
+#
+# Rewrite FTP commands sent by clients on-the-fly,
+# using regular expression matching and substitution 
+# (http://www.proftpd.org/docs/contrib/mod_rewrite.html)
+#   LoadModule mod_rewrite.c
+#
+# Support for the SSH2, SFTP, and SCP protocols, for secure file transfer over
+# an SSH2 connection (http://www.castaglia.org/proftpd/modules/mod_sftp.html)
+#   LoadModule mod_sftp.c
+#
+# Use PAM to provide a 'keyboard-interactive' SSH2 authentication method for
+# mod_sftp (http://www.castaglia.org/proftpd/modules/mod_sftp_pam.html)
+#   LoadModule mod_sftp_pam.c
+#
+# Use SQL (via mod_sql) for looking up authorized SSH2 public keys for user
+# and host based authentication
+# (http://www.castaglia.org/proftpd/modules/mod_sftp_sql.html)
+#   LoadModule mod_sftp_sql.c
+#
+# Provide data transfer rate "shaping" across the entire server
+# (http://www.castaglia.org/proftpd/modules/mod_shaper.html)
+#   LoadModule mod_shaper.c
+#
+# Support for miscellaneous SITE commands such as SITE MKDIR, SITE SYMLINK,
+# and SITE UTIME (http://www.proftpd.org/docs/contrib/mod_site_misc.html)
+#   LoadModule mod_site_misc.c
+#
+# Provide an external SSL session cache using shared memory
+# (contrib/mod_tls_shmcache.html)
+#   LoadModule mod_tls_shmcache.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap.html)
+#   LoadModule mod_wrap.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, as well as SQL-based access rules, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap2.html)
+#   LoadModule mod_wrap2.c
+#
+# Support module for mod_wrap2 that handles access rules stored in specially
+# formatted files on disk
+# (http://www.proftpd.org/docs/contrib/mod_wrap2_file.html)
+#   LoadModule mod_wrap2_file.c
+#
+# Support module for mod_wrap2 that handles access rules stored in SQL
+# database tables (http://www.proftpd.org/docs/contrib/mod_wrap2_sql.html)
+#   LoadModule mod_wrap2_sql.c
+#
+# Provide a flexible way of specifying that certain configuration directives
+# only apply to certain sessions, based on credentials such as connection
+# class, user, or group membership
+# (http://www.proftpd.org/docs/contrib/mod_ifsession.html)
+#   LoadModule mod_ifsession.c
+
+========================================================================================================================================
+### my1_proftpd.conf file:
+
+# This is the ProFTPD configuration file
+# See: http://www.proftpd.org
+# See: http://www.proftpd.org/docs/howto/index.html
+# See: http://www.proftpd.org/docs/directives/linked/by-name.html
+# Server Config - config used for anything outside a <VirtualHost> or <Global> context
+
+
+ServerName			"MY OWN SRV.L1"
+ServerIdent			on "FTP Server ready."
+ServerAdmin			root@localhost
+ServerType 			standalone
+DefaultServer 			on
+# MultilineRFC2228 		on
+# DefaultTransferMode 		binary
+
+TimeoutLogin 		120
+TimeoutIdle 		300
+TimeoutNoTransfer 	180
+TimeoutStalled 		300
+
+
+# Port 21 is the standard FTP port.
+#Port 7897
+Port 21
+
+# In some cases you have to specify passive ports range to by-pass
+# firewall limitations. Ephemeral ports can be used for that, but
+# feel free to use a more narrow range.  
+PassivePorts 6510 6525  
+
+# If your host was NATted, this option is useful in order to
+# allow passive tranfers to work. You have to use your public
+# address and opening the passive ports used on your firewall as well.
+MasqueradeAddress 1.2.3.4
+
+# This is useful for masquerading address with dynamic IPs:
+# refresh any configured MasqueradeAddress directives every 8 hours
+#<IfModule mod_dynmasq.c>
+# DynMasqRefresh 28800
+#</IfModule>
+
+# Use PAM (Pluggable Authentication Modules) to authenticate (default) and be authoritative
+# The AuthPAMConfig directive is used to specify the name of the service used when performing the PAM check
+# See: http://www.proftpd.org/docs/modules/mod_auth_pam.html 
+
+<IfModule mod_auth_pam.c>
+   AuthPAM   on
+   AuthPAMConfig   proftpd
+   AuthPAMOptions   NoTTY
+</IfModule>
+
+# It is important that mod_auth_pam appear before mod_auth_unix, and
+# that the asterisk ("*") appear after the name, not before.
+# The asterisk after a module name in the AuthOrder directive 
+# is what tells proftpd to treat that module's results as authoritative.
+#AuthOrder   mod_auth_unix.c
+AuthOrder   mod_auth_pam.c* mod_auth_unix.c
+
+# The PersistentPasswd directive controls how mod_auth_unix handles authentication,
+# user/group lookups, and user/group to name mapping.
+# See: http://www.proftpd.org/docs/modules/mod_auth_unix.html
+# If you use NIS/YP/LDAP you may need to disable PersistentPasswd
+PersistentPasswd   off
+
+# Don't do reverse DNS lookups (hangs on DNS problems)
+UseReverseDNS   off
+
+# Umask 022 is a good standard umask to prevent new dirs and files
+# from being group and world writable.
+Umask   022
+
+# To prevent DoS attacks, set the maximum number of child processes
+# to 20.  If you need to allow more than 20 concurrent connections
+# at once, simply increase this value.  Note that this ONLY works
+# in standalone mode; in inetd mode you should use an inetd server
+# that allows you to limit maximum number of processes per service
+# (such as xinetd)
+MaxInstances   15
+
+# Set the user and group under which the server will run.
+# Never ever run as root
+
+User   userproftpd
+Group  userproftpd
+
+#<Limit LOGIN>
+#  AllowAll
+#</Limit>
+
+<Limit LOGIN>
+  AllowUser ted
+  DenyALL
+</Limit>
+
+# You can have a separate file from the regular /etc/passwd
+# The "mod_auth_file" module is compiled by default
+# See: http://www.proftpd.org/docs/modules/mod_auth_file.html 
+#AuthUserFile   /etc/proftpd/auth/users.passwd
+#AuthGroupFile  /etc/proftpd/auth/users.group
+
+# To cause every FTP user to be "jailed" (chrooted) into their home
+# directory, uncomment this line.
+#DefaultRoot   ~ !adm
+#DefaultRoot   ~
+DefaultRoot   /home/MyCloud_Files
+
+# Normally, we want files to be overwriteable.
+<Directory /home/MyCloud_Files>
+  AllowOverwrite on
+</Directory>
+
+# Define the log formats
+LogFormat     default "%h %l %u %t \"%r\" %s %b"
+LogFormat     auth "%v [%P] %h %t \"%r\" %s"
+LogFormat     write "%h %l %u %t \"%r\" %s %b"
+# If "WtmpLog" is "on" every loged user will record in /var/log/wtmp file
+# and if you write in console "w" command this ftp user will shown there. 
+WtmpLog   off
+
+# TLS (http://www.castaglia.org/proftpd/modules/mod_tls.html)
+<IfModule mod_tls.c>
+   TLSEngine			on
+   TLSProtocol   SSLv23
+   TLSRequired			on
+   TLSRSACertificateFile		/etc/proftpd/ssl/proftpd.cert.pem
+   TLSRSACertificateKeyFile	/etc/proftpd/ssl/proftpd.key.pem
+   TLSCipherSuite		ALL:!ADH:!DES
+   TLSOptions			NoCertRequest
+   TLSVerifyClient		off
+   #TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
+   TLSLog			/var/log/proftpd/tls.log
+   <IfModule mod_tls_shmcache.c>
+     TLSSessionCache		shm:/file=/var/run/proftpd/sesscache
+   </IfModule>
+</IfModule>
+
+# Dynamic ban lists (http://www.proftpd.org/docs/contrib/mod_ban.html)
+# Enable this with PROFTPD_OPTIONS=-DDYNAMIC_BAN_LISTS in /etc/sysconfig/proftpd
+#<IfDefine DYNAMIC_BAN_LISTS>
+#  LoadModule			mod_ban.c
+#  BanEngine			on
+#  BanLog			/var/log/proftpd/ban.log
+#  BanTable			/var/run/proftpd/ban.tab
+#
+#  # If the same client reaches the MaxLoginAttempts limit 2 times
+#  # within 10 minutes, automatically add a ban for that client that
+#  # will expire after one hour.
+#  BanOnEvent			MaxLoginAttempts 2/00:10:00 01:00:00
+#
+#  # Allow the FTP admin to manually add/remove bans
+#  BanControlsACLs		all allow user ftpadm
+#</IfDefine>
+
+#######################################################################
+# Global Config                                                       #
+#######################################################################
+# Global Config - config common to Server Config and all virtual hosts
+<Global>
+
+    DisplayLogin              /etc/proftpd/welcome.msg
+    AccessDenyMsg             "404 Access for %u has been denied.
+  # Record all logins
+    #ExtendedLog               /var/log/proftpd/auth.log AUTH auth
+  #
+  # Paranoia logging level....
+    ExtendedLog              /var/log/proftpd/paranoid.log ALL default
+  #
+  # Disable sendfile by default since it breaks displaying the download speeds in
+  # ftptop and ftpwho
+    UseSendfile   off
+  #
+  # Umask 022 is a good standard umask to prevent new dirs and files
+  # from being group and world writable
+    #Umask   022
+  #
+    RequireValidShell   on
+    UseFtpUsers   on 
+    RootLogin   off   
+    MaxLoginAttempts   3
+
+    #AllowStoreRestart         on
+    #AllowRetrieveRestart      on
+    #AllowForeignAddress       on
+    #DirFakeGroup              on   ~ 
+    #DirFakeUser               on   ~ 
+    #DirFakeMode               0440 
+    #HiddenStor                on
+  
+  # Allow users to overwrite files and change permissions
+    #AllowOverwrite   yes
+    #<Limit ALL SITE_CHMOD>
+    #  AllowAll
+    #</Limit>
+
+  # VALID LOGINS
+    #<Limit LOGIN>
+    #   AllowUser ted
+    #   DenyALL
+    #</Limit>
+
+</Global>
+
+# Dynamic Shared Object (DSO) loading
+# See README.DSO and howto/DSO.html for more details
+#
+# General database support (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql.c
+#
+# Support for base-64 or hex encoded MD5 and SHA1 passwords from SQL tables
+# (contrib/mod_sql_passwd.html)
+#   LoadModule mod_sql_passwd.c
+#
+# Mysql support (requires proftpd-mysql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_mysql.c
+#
+# Postgresql support (requires proftpd-postgresql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_postgres.c
+#
+# Quota support (http://www.proftpd.org/docs/contrib/mod_quotatab.html)
+#   LoadModule mod_quotatab.c
+#
+# File-specific "driver" for storing quota table information in files
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_file.html)
+#   LoadModule mod_quotatab_file.c
+#
+# SQL database "driver" for storing quota table information in SQL tables
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_sql.html)
+#   LoadModule mod_quotatab_sql.c
+#
+# LDAP support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/directives/linked/config_ref_mod_ldap.html)
+#   LoadModule mod_ldap.c
+#
+# LDAP quota support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_ldap.html)
+#   LoadModule mod_quotatab_ldap.c
+#
+# Support for authenticating users using the RADIUS protocol
+# (http://www.proftpd.org/docs/contrib/mod_radius.html)
+#   LoadModule mod_radius.c
+#
+# Retrieve quota limit table information from a RADIUS server
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_radius.html)
+#   LoadModule mod_quotatab_radius.c
+#
+# Administrative control actions for the ftpdctl program
+# (http://www.proftpd.org/docs/contrib/mod_ctrls_admin.html)
+#   LoadModule mod_ctrls_admin.c
+#
+# Execute external programs or scripts at various points in the process
+# of handling FTP commands
+# (http://www.castaglia.org/proftpd/modules/mod_exec.html)
+#   LoadModule mod_exec.c
+#
+# Support for POSIX ACLs
+# (http://www.proftpd.org/docs/modules/mod_facl.html)
+#   LoadModule mod_facl.c
+#
+# Support for using the GeoIP library to look up geographical information on
+# the connecting client and using that to set access controls for the server
+# (http://www.castaglia.org/proftpd/modules/mod_geoip.html)
+#   LoadModule mod_geoip.c
+#
+# Configure server availability based on system load
+# (http://www.proftpd.org/docs/contrib/mod_load.html)
+#   LoadModule mod_load.c
+#
+# Limit downloads to a multiple of upload volume (see README.ratio)
+#   LoadModule mod_ratio.c
+#
+# Rewrite FTP commands sent by clients on-the-fly,
+# using regular expression matching and substitution 
+# (http://www.proftpd.org/docs/contrib/mod_rewrite.html)
+#   LoadModule mod_rewrite.c
+#
+# Support for the SSH2, SFTP, and SCP protocols, for secure file transfer over
+# an SSH2 connection (http://www.castaglia.org/proftpd/modules/mod_sftp.html)
+#   LoadModule mod_sftp.c
+#
+# Use PAM to provide a 'keyboard-interactive' SSH2 authentication method for
+# mod_sftp (http://www.castaglia.org/proftpd/modules/mod_sftp_pam.html)
+#   LoadModule mod_sftp_pam.c
+#
+# Use SQL (via mod_sql) for looking up authorized SSH2 public keys for user
+# and host based authentication
+# (http://www.castaglia.org/proftpd/modules/mod_sftp_sql.html)
+#   LoadModule mod_sftp_sql.c
+#
+# Provide data transfer rate "shaping" across the entire server
+# (http://www.castaglia.org/proftpd/modules/mod_shaper.html)
+#   LoadModule mod_shaper.c
+#
+# Support for miscellaneous SITE commands such as SITE MKDIR, SITE SYMLINK,
+# and SITE UTIME (http://www.proftpd.org/docs/contrib/mod_site_misc.html)
+#   LoadModule mod_site_misc.c
+#
+# Provide an external SSL session cache using shared memory
+# (contrib/mod_tls_shmcache.html)
+#   LoadModule mod_tls_shmcache.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap.html)
+#   LoadModule mod_wrap.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, as well as SQL-based access rules, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap2.html)
+#   LoadModule mod_wrap2.c
+#
+# Support module for mod_wrap2 that handles access rules stored in specially
+# formatted files on disk
+# (http://www.proftpd.org/docs/contrib/mod_wrap2_file.html)
+#   LoadModule mod_wrap2_file.c
+#
+# Support module for mod_wrap2 that handles access rules stored in SQL
+# database tables (http://www.proftpd.org/docs/contrib/mod_wrap2_sql.html)
+#   LoadModule mod_wrap2_sql.c
+#
+# Provide a flexible way of specifying that certain configuration directives
+# only apply to certain sessions, based on credentials such as connection
+# class, user, or group membership
+# (http://www.proftpd.org/docs/contrib/mod_ifsession.html)
+#   LoadModule mod_ifsession.c
+
+========================================================================================================================================
+### MY OLD proftpd.conf file:
+
+# This is the ProFTPD configuration file
+#
+# See: http://www.proftpd.org/docs/directives/linked/by-name.html
+
+# Server Config - config used for anything outside a <VirtualHost> or <Global> context
+# See: http://www.proftpd.org/docs/howto/Vhost.html
+
+ServerName			"MY OWN SRV.L1"
+ServerIdent			on "FTP Server ready."
+ServerAdmin			root@localhost
+ServerType 			standalone
+DefaultServer 			on
+# MultilineRFC2228 		on
+# DefaultTransferMode binary
+
+TimeoutNoTransfer 	600
+TimeoutStalled 		600
+TimeoutIdle 		1200
+
+# Port 21 is the standard FTP port.
+#Port 7897
+Port 21
+
+# In some cases you have to specify passive ports range to by-pass
+# firewall limitations. Ephemeral ports can be used for that, but
+# feel free to use a more narrow range.  
+PassivePorts 6510 6525  
+
+# If your host was NATted, this option is useful in order to
+# allow passive tranfers to work. You have to use your public
+# address and opening the passive ports used on your firewall as well.
+MasqueradeAddress     1.2.3.4
+
+# This is useful for masquerading address with dynamic IPs:
+# refresh any configured MasqueradeAddress directives every 8 hours
+#<IfModule mod_dynmasq.c>
+# DynMasqRefresh 28800
+#</IfModule>
+
+# Use PAM (Pluggable Authentication Modules) to authenticate (default) and be authoritative
+AuthPAM            on
+
+# The AuthPAMConfig directive is used to specify the name of the service used when performing the PAM check
+# See: http://www.proftpd.org/docs/modules/mod_auth_pam.html 
+
+#<IfModule mod_auth_pam.c>
+#	AuthPAMConfig     ftpd
+#	AuthPAMOptions    NoTTY
+#</IfModule>
+
+<IfModule mod_auth_pam.c>
+   AuthPAMConfig      proftpd
+   AuthPAMOptions     NoTTY
+</IfModule>
+
+# It is important that mod_auth_pam appear before mod_auth_unix, and
+# that the asterisk ("*") appear after the name, not before.
+# The asterisk after a module name in the AuthOrder directive 
+# is what tells proftpd to treat that module's results as authoritative.
+AuthOrder     mod_auth_pam.c* mod_auth_unix.c
+
+# The PersistentPasswd directive controls how mod_auth_unix handles authentication,
+# user/group lookups, and user/group to name mapping.
+# See: http://www.proftpd.org/docs/modules/mod_auth_unix.html
+# If you use NIS/YP/LDAP you may need to disable PersistentPasswd
+PersistentPasswd		off
+
+# Don't do reverse DNS lookups (hangs on DNS problems)
+UseReverseDNS			off
+
+# Umask 022 is a good standard umask to prevent new dirs and files
+# from being group and world writable.
+Umask				022
+
+# To prevent DoS attacks, set the maximum number of child processes
+# to 20.  If you need to allow more than 20 concurrent connections
+# at once, simply increase this value.  Note that this ONLY works
+# in standalone mode; in inetd mode you should use an inetd server
+# that allows you to limit maximum number of processes per service
+# (such as xinetd)
+MaxInstances			15
+
+# Set the user and group under which the server will run.
+# Never ever run as root
+#User 			nobody
+#Group 			nogroup
+User 				ftp
+Group 			ftp
+#User 			ted
+#Group 			ted
+
+UseFtpUsers off 
+RootLogin off 
+
+# You can have a separate file from the regular /etc/passwd
+# The "mod_auth_file" module is compiled by default
+# See: http://www.proftpd.org/docs/modules/mod_auth_file.html 
+#AuthUserFile /etc/proftpd-passwd
+
+# To cause every FTP user to be "jailed" (chrooted) into their home
+# directory, uncomment this line.
+DefaultRoot ~/MyCloud_Files !adm
+
+# Normally, we want files to be overwriteable.
+<Directory ~/MyCloud_Files>
+  AllowOverwrite		on
+</Directory>
+
+# Allow users to overwrite files and change permissions
+#  AllowOverwrite		yes
+#  <Limit ALL SITE_CHMOD>
+#    AllowAll
+#  </Limit>
+
+# Disable sendfile by default since it breaks displaying the download speeds in
+# ftptop and ftpwho
+UseSendfile			off
+
+# Define the log formats
+LogFormat			default	"%h %l %u %t \"%r\" %s %b"
+LogFormat			auth	"%v [%P] %h %t \"%r\" %s"
+LogFormat 			write 	"%h %l %u %t \"%r\" %s %b"
+
+# Dynamic Shared Object (DSO) loading
+# See README.DSO and howto/DSO.html for more details
+#
+# General database support (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql.c
+#
+# Support for base-64 or hex encoded MD5 and SHA1 passwords from SQL tables
+# (contrib/mod_sql_passwd.html)
+#   LoadModule mod_sql_passwd.c
+#
+# Mysql support (requires proftpd-mysql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_mysql.c
+#
+# Postgresql support (requires proftpd-postgresql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_postgres.c
+#
+# Quota support (http://www.proftpd.org/docs/contrib/mod_quotatab.html)
+#   LoadModule mod_quotatab.c
+#
+# File-specific "driver" for storing quota table information in files
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_file.html)
+#   LoadModule mod_quotatab_file.c
+#
+# SQL database "driver" for storing quota table information in SQL tables
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_sql.html)
+#   LoadModule mod_quotatab_sql.c
+#
+# LDAP support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/directives/linked/config_ref_mod_ldap.html)
+#   LoadModule mod_ldap.c
+#
+# LDAP quota support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_ldap.html)
+#   LoadModule mod_quotatab_ldap.c
+#
+# Support for authenticating users using the RADIUS protocol
+# (http://www.proftpd.org/docs/contrib/mod_radius.html)
+#   LoadModule mod_radius.c
+#
+# Retrieve quota limit table information from a RADIUS server
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_radius.html)
+#   LoadModule mod_quotatab_radius.c
+#
+# Administrative control actions for the ftpdctl program
+# (http://www.proftpd.org/docs/contrib/mod_ctrls_admin.html)
+#   LoadModule mod_ctrls_admin.c
+#
+# Execute external programs or scripts at various points in the process
+# of handling FTP commands
+# (http://www.castaglia.org/proftpd/modules/mod_exec.html)
+#   LoadModule mod_exec.c
+#
+# Support for POSIX ACLs
+# (http://www.proftpd.org/docs/modules/mod_facl.html)
+#   LoadModule mod_facl.c
+#
+# Support for using the GeoIP library to look up geographical information on
+# the connecting client and using that to set access controls for the server
+# (http://www.castaglia.org/proftpd/modules/mod_geoip.html)
+#   LoadModule mod_geoip.c
+#
+# Configure server availability based on system load
+# (http://www.proftpd.org/docs/contrib/mod_load.html)
+#   LoadModule mod_load.c
+#
+# Limit downloads to a multiple of upload volume (see README.ratio)
+#   LoadModule mod_ratio.c
+#
+# Rewrite FTP commands sent by clients on-the-fly,
+# using regular expression matching and substitution 
+# (http://www.proftpd.org/docs/contrib/mod_rewrite.html)
+#   LoadModule mod_rewrite.c
+#
+# Support for the SSH2, SFTP, and SCP protocols, for secure file transfer over
+# an SSH2 connection (http://www.castaglia.org/proftpd/modules/mod_sftp.html)
+#   LoadModule mod_sftp.c
+#
+# Use PAM to provide a 'keyboard-interactive' SSH2 authentication method for
+# mod_sftp (http://www.castaglia.org/proftpd/modules/mod_sftp_pam.html)
+#   LoadModule mod_sftp_pam.c
+#
+# Use SQL (via mod_sql) for looking up authorized SSH2 public keys for user
+# and host based authentication
+# (http://www.castaglia.org/proftpd/modules/mod_sftp_sql.html)
+#   LoadModule mod_sftp_sql.c
+#
+# Provide data transfer rate "shaping" across the entire server
+# (http://www.castaglia.org/proftpd/modules/mod_shaper.html)
+#   LoadModule mod_shaper.c
+#
+# Support for miscellaneous SITE commands such as SITE MKDIR, SITE SYMLINK,
+# and SITE UTIME (http://www.proftpd.org/docs/contrib/mod_site_misc.html)
+#   LoadModule mod_site_misc.c
+#
+# Provide an external SSL session cache using shared memory
+# (contrib/mod_tls_shmcache.html)
+#   LoadModule mod_tls_shmcache.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap.html)
+#   LoadModule mod_wrap.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, as well as SQL-based access rules, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap2.html)
+#   LoadModule mod_wrap2.c
+#
+# Support module for mod_wrap2 that handles access rules stored in specially
+# formatted files on disk
+# (http://www.proftpd.org/docs/contrib/mod_wrap2_file.html)
+#   LoadModule mod_wrap2_file.c
+#
+# Support module for mod_wrap2 that handles access rules stored in SQL
+# database tables (http://www.proftpd.org/docs/contrib/mod_wrap2_sql.html)
+#   LoadModule mod_wrap2_sql.c
+#
+# Provide a flexible way of specifying that certain configuration directives
+# only apply to certain sessions, based on credentials such as connection
+# class, user, or group membership
+# (http://www.proftpd.org/docs/contrib/mod_ifsession.html)
+#   LoadModule mod_ifsession.c
+
+# TLS (http://www.castaglia.org/proftpd/modules/mod_tls.html)
+<IfModule mod_tls.c>
+   TLSEngine			on
+   TLSProtocol   SSLv23
+   TLSRequired			on
+   TLSRSACertificateFile		/etc/proftpd/ssl/proftpd.cert.pem
+   TLSRSACertificateKeyFile	/etc/proftpd/ssl/proftpd.key.pem
+   TLSCipherSuite		ALL:!ADH:!DES
+   TLSOptions			NoCertRequest
+   TLSVerifyClient		off
+   #TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
+   TLSLog			/var/log/proftpd/tls.log
+   <IfModule mod_tls_shmcache.c>
+     TLSSessionCache		shm:/file=/var/run/proftpd/sesscache
+   </IfModule>
+</IfModule>
+
+# Dynamic ban lists (http://www.proftpd.org/docs/contrib/mod_ban.html)
+# Enable this with PROFTPD_OPTIONS=-DDYNAMIC_BAN_LISTS in /etc/sysconfig/proftpd
+#<IfDefine DYNAMIC_BAN_LISTS>
+#  LoadModule			mod_ban.c
+#  BanEngine			on
+#  BanLog			/var/log/proftpd/ban.log
+#  BanTable			/var/run/proftpd/ban.tab
+#
+#  # If the same client reaches the MaxLoginAttempts limit 2 times
+#  # within 10 minutes, automatically add a ban for that client that
+#  # will expire after one hour.
+#  BanOnEvent			MaxLoginAttempts 2/00:10:00 01:00:00
+#
+#  # Allow the FTP admin to manually add/remove bans
+#  BanControlsACLs		all allow user ftpadm
+#</IfDefine>
+
+#######################################################################
+# Global Config                                                       #
+#######################################################################
+# Global Config - config common to Server Config and all virtual hosts
+# See: http://www.proftpd.org/docs/howto/Vhost.html
+<Global>
+
+    DisplayLogin              /etc/proftpd/welcome.msg
+  # AccessDenyMsg             "404 Access for %u has been denied.
+  # Record all logins
+    ExtendedLog               /var/log/proftpd/auth.log AUTH auth
+  #
+  # Paranoia logging level....
+  # ExtendedLog              /var/log/proftpd/paranoid.log ALL default
+	
+  # Umask 022 is a good standard umask to prevent new dirs and files
+  # from being group and world writable
+  Umask				022
+  
+  RequireValidShell off
+  
+  #AllowStoreRestart         on
+  #AllowRetrieveRestart      on
+  #AllowForeignAddress       on
+  #DirFakeGroup              on   ~ 
+  #DirFakeUser               on   ~ 
+  #DirFakeMode               0440 
+  #HiddenStor                on
+  
+  # Allow users to overwrite files and change permissions
+  AllowOverwrite		yes
+  #<Limit ALL SITE_CHMOD>
+  #  AllowAll
+  #</Limit>
+
+</Global>
+
+#######################################################################
+# VirtualHosts #
+#######################################################################
+
+# for future usage
+#Include /etc/proftpd/virtuals.conf
+
+# A basic anonymous configuration, with an upload directory
+# Enable this with PROFTPD_OPTIONS=-DANONYMOUS_FTP in /etc/sysconfig/proftpd
+#<IfDefine ANONYMOUS_FTP>
+#  <Anonymous ~ftp>
+#    User			ftp
+#    Group			ftp
+#    AccessGrantMsg		"Anonymous login ok, restrictions apply."
+#
+#    # We want clients to be able to login with "anonymous" as well as "ftp"
+#    UserAlias			anonymous ftp
+#
+#    # Limit the maximum number of anonymous logins
+#    MaxClients			10 "Sorry, max %m users -- try again later"
+#
+#    # Put the user into /pub right after login
+#    #DefaultChdir		/pub
+#
+#    # We want 'welcome.msg' displayed at login, '.message' displayed in
+#    # each newly chdired directory and tell users to read README* files. 
+#    DisplayLogin		/welcome.msg
+#    DisplayChdir		.message
+#    DisplayReadme		README*
+#
+#    # Cosmetic option to make all files appear to be owned by user "ftp"
+#    DirFakeUser			on ftp
+#    DirFakeGroup		on ftp
+#
+#    # Limit WRITE everywhere in the anonymous chroot
+#    <Limit WRITE SITE_CHMOD>
+#      DenyAll
+#    </Limit>
+#
+#    # An upload directory that allows storing files but not retrieving
+#    # or creating directories.
+#    <Directory uploads/*>
+#      AllowOverwrite		no
+#      <Limit READ>
+#        DenyAll
+#      </Limit>
+#
+#      <Limit STOR>
+#        AllowAll
+#      </Limit>
+#    </Directory>
+#
+#    # Don't write anonymous accesses to the system wtmp file (good idea!)
+#    WtmpLog			off
+#
+#    # Logging for the anonymous transfers
+#    ExtendedLog			/var/log/proftpd/access.log WRITE,READ default
+#    ExtendedLog			/var/log/proftpd/auth.log AUTH auth
+#
+#  </Anonymous>
+#</IfDefine>
+
+
+========================================================================================================================================
+
+-- SOME COMMON INFO ABOUT VSFTP AND PROFTPD - some conf. and some set ups : 
+
+##### info for VSFTPD: #####
+
+### var.1.
+
+
+-----------------------------------------------------------------------------------
+### var.2.
+
+
+
+-----------------------------------------------------------------------------------
+some info webs:
+http://beginlinux.com/blog/2009/01/secure-ftp-with-ssl-on-centos/
+http://www.linuxnix.com/2010/02/ftps-server-configuration.html
+http://www.cyberciti.biz/tips/configure-vsfptd-secure-connections-via-ssl-tls.html
+
+##### info for PROFTPD: #####
+
+### var.1.
+
+1. Config for SSL/TLS:
+
+[root@www ~]# cd /etc/pki/tls/certs
+[root@www certs]# openssl req -x509 -nodes -newkey rsa:1024 -keyout /etc/pki/tls/certs/proftpd.pem -out /etc/pki/tls/certs/proftpd.pem  
+
+Generating a 1024 bit RSA private key
+......++++++
+.......++++++
+writing new private key to '/etc/pki/tls/certs/proftpd.pem'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+
+	Country Name (2 letter code) [AU]: JP   # country
+	State or Province Name (full name) [Some-State]: Hiroshima   # state
+	Locality Name (eg, city) []: Hiroshima   # city
+	Organization Name (eg, company) [Internet Widgits Pty Ltd]: GTS   # company
+	Organizational Unit Name (eg, section) []: Server World   # department
+	Common Name (eg, YOUR name) []: www.server.world   # server's FQDN
+	Email Address []: xxx@server.world   # email address
+
+[root@www certs]# chmod 600 proftpd.pem
+[root@www certs]# vi /etc/proftpd.conf 
+
+	# line 176: change like below
+
+	#<IfDefine TLS>
+	TLSEngine                  on
+	TLSRequired                on
+	TLSRSACertificateFile      /etc/pki/tls/certs/proftpd.pem
+	TLSRSACertificateKeyFile   /etc/pki/tls/certs/proftpd.pem
+	TLSCipherSuite             ALL:!ADH:!DES
+	TLSOptions                 NoCertRequest
+	TLSVerifyClient            off
+	TLSRenegotiate             ctrl 3600 data 512000 required off timeout 33 00
+	TLSLog                     /var/log/proftpd/tls.log
+
+	# <IfModule mod_tls_shmcache.c>
+	# TLSSessionCache   shm:/file=/var/run/proftpd/sesscache
+	# </IfModule>
+	# </IfDefine> 
+
+[root@www certs]# /etc/rc.d/init.d/proftpd restart
+	Shutting down proftpd: [  OK  ]
+	Starting proftpd: [  OK  ]
+
+-----------------------------------------------------------------------------------
+### var.2.
+
+1. Install proftpd from source
+First we are going to download the latest source code which is 1.2.10 at the time of writing.
+
+	# cd /usr/src
+	# wget ftp://ftp.proftpd.org/distrib/source/proftpd-1.2.10.tar.gz
+	# tar -xvzf proftpd-1.2.10.tar.gz
+	# cd proftpd-1.2.10
+
+Make sure you have a compiler installed and the openssl packages.
+Todo this on a RedH based os:
+
+	# yum install build-essential
+	# yum install libssl-dev
+
+Then compile proftpd with TLS support.
+
+	# ./configure --with-modules=mod_tls
+	# make
+	# make install
+
+Now everything should be installed so its time to test. 
+If it works using plain ftp so startup the server using the default config file.
+
+	# proftpd -l
+	Compiled-in modules:
+	  mod_core.c
+	  mod_xfer.c
+	  mod_auth_unix.c
+	  mod_auth_file.c
+	  mod_auth.c
+	  mod_ls.c
+	  mod_log.c
+	  mod_site.c
+	  mod_tls.c
+	  mod_cap.c
+	# /usr/local/sbin/proftpd  -c /usr/local/etc/proftpd.conf
+
+If everything is alright proftpd should be started and you should be able to login using any ftp client.
+
+	# ftp localhost
+	Connected to localhost.localdomain.
+	220 ProFTPD 1.2.10 Server (ProFTPD Default Installation) [127.0.0.1]
+	Name (localhost:troublenow): troublenow
+	331 Password required for troublenow.
+	Password:
+	230 User troublenow logged in.
+	Remote system type is UNIX.
+	Using binary mode to transfer files.
+	ftp> ls
+	200 PORT command successful
+	150 Opening ASCII mode data connection for file list
+	226 Transfer complete.
+	ftp> quit
+	221 Goodbye.
+
+Good everything seems to be working so kill the the daemon and lets move on to setup proftpd
+
+	# ps waux | grep -i proftpd
+	nobody   17505  0.0  0.3   3788  1900 ?        Ss   07:19   0:00 proftpd: (accepting connections)
+	# kill `ps waux | grep -i proftpd | awk {' print $2 '}`
+	# ps waux | grep -i proftpd
+	#
+
+2. Create SSL Keys
+Now lets create a self signed certificate and put that in /usr/local/etc/ftpcert/.
+
+	# cd /usr/local/etc/
+	# mkdir ftpcert
+	# cd ftpcert/
+	# openssl genrsa 1024 > host.key
+	# chmod 400 host.key
+	# openssl req -new -x509 -nodes -sha1 -days 365 -key host.key > host.cert
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+	Country Name (2 letter code) [AU]:
+	State or Province Name (full name) [Some-State]:
+	Locality Name (eg, city) []:
+	Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+	Organizational Unit Name (eg, section) []:
+	Common Name (eg, YOUR name) []: 
+	Email Address []: 
+
+3. Configure Proftpd
+I will log everything in /var/log/ftpd so first we will need to create that directory:
+
+	# mkdir /var/log/ftpd
+
+Now replace everything in the default /usr/local/etc/proftpd.conf to the new settings:
+
+	ServerName                      "test FTP server"
+	ServerType                      standalone
+	DefaultServer                   on
+
+	Port                            21
+
+	Umask                           022
+
+	AllowStoreRestart               on
+	AllowRetrieveRestart            on
+	AllowForeignAddress             on
+
+	LogFormat                       default "%h %l %u %t \"%r\" %s %b"
+	LogFormat                       auth    "%v [%P] %h %t \"%r\" %s"
+	LogFormat                       write   "%h %l %u %t \"%r\" %s %b"
+
+	DefaultTransferMode             binary
+	UseFtpUsers                     on
+
+	MaxInstances                    30
+
+	User                            nobody    # Провери настройката !!!
+	Group                           nogroup   # Провери настройката !!!
+
+	DefaultRoot                     ~         # Провери настройката !!!
+
+	AllowOverwrite                  on
+
+
+	PassivePorts                    59000 59999   # Провери настройката !!!
+	DefaultRoot                     ~   # Провери настройката !!!
+	AllowOverwrite                  on
+
+	TransferLog                     /var/log/ftpd/xferlog
+	ExtendedLog                     /var/log/ftpd/access.log WRITE,READ write
+	ExtendedLog                     /var/log/ftpd/auth.log AUTH auth
+	ExtendedLog                     /var/log/ftpd/paranoid.log ALL default
+
+
+
+	<IfModule mod_tls.c>
+		TLSEngine			on
+		TLSProtocol   SSLv23
+		TLSRequired			on
+		TLSRSACertificateFile		/etc/proftpd/ssl/proftpd.cert.pem
+		TLSRSACertificateKeyFile	/etc/proftpd/ssl/proftpd.key.pem
+		TLSCipherSuite		ALL:!ADH:!DES
+		TLSOptions			NoCertRequest
+		TLSVerifyClient		off
+		#TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
+		TLSLog			/var/log/proftpd/tls.log
+		<IfModule mod_tls_shmcache.c>
+			TLSSessionCache		shm:/file=/var/run/proftpd/sesscache
+		</IfModule>
+	</IfModule>
+
+Now startup proftpd and test the connection of the ftp server using tls.
+
+-----------------------------------------------------------------------------------
+### var.3.
+
+1. First you need to generate the certificate and private key files. 
+My configuration files are in /etc/proftpd/ which may be different for you. 
+I created a folder called ssl within the proftpd folder, navigated to the folder, and created the certificates inside with these commands:
+
+	# mkdir /etc/proftpd/ssl
+	# cd /etc/proftpd/ssl/
+	# openssl req -new -x509 -days 3650 -nodes -out tls-rsa.pem -keyout tls-rsa-key.pem
+
+Now you have a certificate that will last 10 years. More than enough time. 
+
+2. The next thing to do is tell Proftpd about it and enable the mod_tls module so it all works.
+In your configuration file (/etc/proftpd/proftpd.conf for me) add the following lines inside a pair of ifmodule tags.
+
+	TLSEngine on
+	TLSProtocol SSLv23
+	TLSRequired on
+	TLSRSACertificateFile /etc/proftpd/ssl/tls-rsa.pem
+	TLSRSACertificateKeyFile /etc/proftpd/ssl/tls-rsa-key.pem
+	TLSVerifyClient off
+
+Afterwards, just restart Proftpd and you will now have optional SSL when connecting to your FTP.
+
+	# /etc/rc.d/init.d/proftpd restart
+
+What this creates is know as "Explicit SSL" to most FTP clients. 
+It is better than Implicit because the SSL connection is established before the username is transmitted by the client. 
+With Implicit, the username is transmitted first. 
+Then, if it is a valid user the SSL connection begins so the password is transmitted over SSL. 
+To clarify, Explicit excrypts usernames and passwords, whereas, Implicit encrypts the password only. 
+Data and commands are encrypted by both.
+
+The differences are for performance mostly. If your server receives a lot of login attempts and you need SSL, I would use Implicit. 
+That way bad login names do not tax your server as much. Though if you don’t care and don’t see a lot of logins, use Explicit SSL.
+Explicit is better!
+
+-----------------------------------------------------------------------------------
+### var.4.
+
+1. If we don't have proftpd and openssl, we have to take it.
+Red Hat and Fedora users type the command: 
+	# yum install proftpd openssl
+
+2. Type "standalone" when you see the "Run proftpd from inetd or standalone?" prompt.
+3. Type the command "vim /etc/proftpd/proftpd.conf" to open the ProFTPd configuration file in the "vim" text editor. 
+   You can replace "vim" with your preferred text editor.
+
+4. Change the line that reads "UseIPv6 off" to "UseIPv6 on."
+5. Add the following lines to the file:
+
+	DefaultRoot ~
+	IdentLookups off
+	ServerIdent on "FTP Server ready."
+
+6. Save and close the file.
+7. Creating the SSL Certificate
+8. Type the command:
+	# mkdir /etc/proftpd/ssl   # to create a directory to contain the SSL certificate.
+	
+9. Type the command: 
+	# openssl req -new -x509 -days 365 -nodes -out /etc/proftpd/ssl/ftp.cert.pem -keyout /etc/proftpd/ssl/ftp.key.pem   
+10. Provide your name, address, country name and email address when prompted.
+11. Enabling the Certificate in ProFTPd
+12. Type the command 
+	# vim /etc/proftpd/proftpd.conf   # to open the ProFTPd configuration file.
+
+13. Locate the "<IfModule mod_tls.c>:" section.
+14. Replace the information between the "<IfModule mod_tls.c>:" and "</IfModule>" lines with the following lines:
+
+	TLSEngine on
+	TLSLog /var/log/proftpd/tls.log
+	TLSProtocol SSLv23
+	TLSOptions NoCertRequest
+	TLSRSACertificateFile /etc/proftpd/ssl/ftp.cert.pem
+	TLSRSACertificateKeyFile /etc/proftpd/ssl/ftp.key.pem
+	TLSVerifyClient off
+	TLSRequired on
+
+15. Save and close the file.
+16. Type this command to restart service: 
+	# /etc/init.d/proftpd restart   # to restart the ProFTPd service.
+
+-----------------------------------------------------------------------------------
+some webs:
+http://www.proftpd.org/docs/howto/TLS.html -> some info about proftpd config.
+http://www.jross.org/articles/tech-guides/ssl-encryption-for-proftpd-ftp-server/
+http://kb.parallels.com/en/2207
+	http://www.server-world.info/en/note?os=CentOS_5&p=ftp&f=7
+	http://www.troublenow.org/6/howto-setup-a-proftpd-daemon-using-ssl-encryption/
+http://www.ehow.com/how_7234125_set-up-proftpd-ssl.html
+http://www.linuxlasse.net/linux/howtos/ProFTPD_as_FTPS_with_TLS_/_SSL
+http://www.unixmen.com/how-to-install-proftpd-tls-on-ubuntu/
+
+-----------------------------------------------------------------------------------
+### var.5.
+
+SOURCE :http://ubuntuforums.org/showthread.php?t=79588
+
+1. Create a user named userftp which will be used only for ftp access. 
+This user don't need a valid shell (more secure) therefore select /bin/false shell for userftp and /home/FTP-shared as home directory (property button in user and group window).
+To make this section clearer, i give you the equivalent command line to create the user, but it would be better to use the GUI (System > Administration > User & Group) to create the user since users here often got problems with the user creation and the password (530 error) with the command line, so i really advice to use the GUI :
+Code:
+	# useradd userftp -p your_password -d /home/FTP-shared -s /bin/false
+	# passwd userftp
+
+# !!! При мен е -> userproftpd сложи му парола !!! с тази парола ще се логвам за FTP 
+
+2. In FTP-shared directory create a download and an upload directory :
+Code:
+	# cd /home/FTP-shared/
+	# sudo mkdir download
+	# sudo mkdir upload
+
+3. Now we have to set the good permissions for these directories :
+Code:
+	# cd /home
+	# chmod 755 FTP-shared
+	# cd FTP-shared
+	# chmod 755 download
+	# chmod 777 upload
+
+4. Now go to the proftpd configuration file :
+Code:
+	# gedit or vim or kate /etc/proftpd.conf
+
+5. Edit your proftpd.conf file like that if it fit to your need :
+Code:
+
+# To really apply changes reload proftpd after modifications.
+AllowOverwrite on
+AuthAliasOnly on
+
+# Choose here the user alias you want !!!!
+UserAlias sauron userftp
+
+ServerName			"ChezFrodon"
+ServerType 			standalone
+DeferWelcome			on
+
+MultilineRFC2228 on
+DefaultServer			on
+ShowSymlinks			off
+
+TimeoutNoTransfer 600
+TimeoutStalled 100
+TimeoutIdle 2200
+
+DisplayChdir                    .message
+ListOptions                	"-l"
+
+RequireValidShell 		off
+
+TimeoutLogin 20
+
+RootLogin 			off
+
+# It's better for debug to create log files ;-)
+ExtendedLog 			/var/log/ftp.log
+TransferLog 			/var/log/xferlog
+SystemLog			/var/log/syslog.log
+
+#DenyFilter			\*.*/
+
+# I don't choose to use /etc/ftpusers file (set inside the users you want to ban, not useful for me)
+UseFtpUsers off
+
+# Allow to restart a download
+AllowStoreRestart		on
+
+# Port 21 is the standard FTP port, so you may prefer to use another port for security reasons (choose here the port you want)
+Port				1980
+
+# To prevent DoS attacks, set the maximum number of child processes
+# to 30.  If you need to allow more than 30 concurrent connections
+# at once, simply increase this value.  Note that this ONLY works
+# in standalone mode, in inetd mode you should use an inetd server
+# that allows you to limit maximum number of processes per service
+# (such as xinetd)
+MaxInstances 8
+
+# Set the user and group that the server normally runs at.
+User                  nobody
+Group                 nogroup
+
+# Umask 022 is a good standard umask to prevent new files and dirs
+# (second parm) from being group and world writable.
+Umask				022	022
+
+PersistentPasswd		off
+
+MaxClients 8
+MaxClientsPerHost 8
+MaxClientsPerUser 8
+MaxHostsPerUser 8
+
+# Display a message after a successful login
+AccessGrantMsg "welcome !!!"
+# This message is displayed for each access good or not
+ServerIdent                  on       "you're at home"
+
+# Lock all the users in home directory, ***** really important *****
+DefaultRoot ~
+
+MaxLoginAttempts    5
+
+#VALID LOGINS
+<Limit LOGIN>
+AllowUser userftp
+DenyALL
+</Limit>
+
+<Directory /home/FTP-shared>
+Umask 022 022
+AllowOverwrite off
+	<Limit MKD STOR DELE XMKD RNRF RNTO RMD XRMD>
+	DenyAll
+	</Limit>
+</Directory>
+
+<Directory /home/FTP-shared/download/*>
+Umask 022 022
+AllowOverwrite off
+	<Limit MKD STOR DELE XMKD RNEF RNTO RMD XRMD>
+	DenyAll
+	</Limit>
+</Directory>
+
+<Directory /home/FTP-shared/upload/>
+Umask 022 022
+AllowOverwrite on
+	<Limit READ RMD DELE>
+      	DenyAll
+    	</Limit>
+
+    	<Limit STOR CWD MKD>
+      	AllowAll
+    	</Limit>
+</Directory>
+
+6. Ok you have done proftpd configuration. 
+Your server is on port 1980 (in this exemple) and the access parameters are:
+	user : sauron
+	password : the one you've set for userftp
+
+7. To perform a syntax check of your proftpd.conf file :
+Code:
+	# proftpd -td5
+
+8. To start, stop or restart service:
+	# /etc/init.d/proftpd start restart stop
+	# service proftpd start
+
+9. SOME NOTE make sure that the server.key is readable only by root.
+
+10. SOME NOTE - Make Restrict access for some users:
+Some of you wish, for different reasons, to create more than one user and give a different access depending on the user.
+For example if i create 2 users, one called user1 and the second called user2 and then want to deny access to the download directory for user2.
+You can do it as following :
+First create the 2 users like userftp in the guide and give them alias names if you use aliases. 
+Then allow your 2 users in the general LIMIT LOGIN section :
+Code:
+
+	#VALID LOGINS
+	<Limit LOGIN>
+		AllowUser user1
+		AllowUser user2
+		DenyALL
+	</Limit>
+
+Once done here is how to modify the directory sections to chose who is able to use which directory :
+Code:
+
+	<Directory /home/FTP-shared/download/*>
+	Umask 022 022
+	AllowOverwrite off
+
+			<Limit ALL>
+			Order Allow,Deny
+			AllowUser user1
+			Deny ALL
+		</Limit>
+
+		<Limit MKD STOR DELE XMKD RNEF RNTO RMD XRMD>
+		DenyAll
+		</Limit>
+	</Directory>
+
+	<Directory> /home/FTP-shared/upload/>
+	Umask 022 022
+	AllowOverwrite on
+
+		   <Limit ALL>
+			Order Allow,Deny
+			AllowUser user1
+					AllowUser user2
+			Deny ALL
+		</Limit>
+
+		<Limit READ RMD DELE>
+			DenyAll
+			</Limit>
+
+			<Limit STOR CWD MKD>
+			AllowAll
+			</Limit>
+	</Directory>
+
+Note - user2 will see the download directory but will not be able to enter the directory.
+
+-----------------------------------------------------------------------------------
+### var.6.
+
+
+-----------------------------------------------------------------------------------
+
+

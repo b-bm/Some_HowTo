@@ -1,0 +1,46 @@
+﻿Name of video : LSA2 - 13.1 part 05.06.2014 ; LSA2 - 13.1 part 05.06.2014
+
+--------------------------------------------------------
+file: list.txt
+
+file 'live_user_aziliann_1373557941.flv'
+file 'live_user_aziliann_1373559742.flv'
+file 'live_user_aziliann_1373561548.flv'
+file 'live_user_aziliann_1373563346.flv'
+
+--------------------------------------------------------
+
+ffmpeg -f concat -i list.txt -c copy final_part_1.mp4
+
+wget ; wget ; wget   
+
+
+
+file 'live_user_aziliann_1401987630.flv'
+file 'live_user_aziliann_1401989435.flv'
+file 'live_user_aziliann_1401991240.flv'
+
+
+--------------------------------------------------------
+
+ffmpeg -f concat -i list.txt -c copy final_part_2.mp4
+
+wget ; wget ; wget ; wget ; wget 
+
+
+file 'live_user_aziliann_1399571650.flv'
+file 'live_user_aziliann_1399573457.flv'
+file 'live_user_aziliann_1399575252.flv'
+
+
+file 'live_user_aziliann_1397154962.flv'
+file 'live_user_aziliann_1397156761.flv'
+
+--------------------------------------------------------
+$ cp final_part_1.mp4 /home/schetovoditel/Downloads
+$ ls -la /home/schetovoditel/Downloads
+$ cd /home/schetovoditel/Downloads
+$ mv 'old name here' 'new name here' or $ mv old_name_here 'new name here'
+$ mv final_part_1.mp4 'LSA2 - 10.2 MySQL part II & Redis.mp4'
+
+

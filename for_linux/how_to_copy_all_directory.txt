@@ -1,0 +1,28 @@
+﻿How to copy files and dirs.
+
+1. cp Command
+cp is a Linux command for copying files and directories. 
+The syntax is as follows:
+ 
+	# cp source destination
+	# cp dir1 dir2
+	# cp -option  source destination
+	# cp -option1 -option2  source destination
+ 
+Example copy /some_dir1/dir2/dir3 folder and all its files to /other_dir1/other_dir2:
+ 
+	# cp -avr /some_dir1/dir2/dir3 /other_dir1/other_dir2
+ 
+Where,
+
+-a : Preserve the specified attributes such as directory an file mode, ownership, timestamps, if possible additional attributes: context, links, xattr, all.
+-v : Explain what is being done.
+-r : Copy directories recursively.
+
+Example:
+
+
+
+
+
+

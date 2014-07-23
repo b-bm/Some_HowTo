@@ -1,0 +1,70 @@
+How to install and setup ntfs-3g for read/write on windows NTFS
+
+What is NTFS3G
+NTFS3G is an open source cross-platform, stable, GPL licensed, POSIX, NTFS R/W driver used in Linux. 
+It provides safe handling of Windows NTFS file systems viz create, remove, rename, move files, directories, hard links, etc.
+
+Once EPEL is installed and enabled, let’s install ntfs-3g package using the below command with root user.
+
+var.1.
+
+Type the following command as root user:
+  # yum install ntfs-3g
+
+How Do I Find Out NTFS Partition Name?
+Simply type the following command:
+  # fdisk -l /dev/sda
+  # fdisk -l /dev/sdb
+
+How Do I Mount /dev/sda1 NTFS Partition at /mnt/ntfs?
+First, load the fuse driver, enter:
+  # modprobe fuse
+
+Create a mount point, enter:
+  # mkdir /mnt/ntfs
+
+To mount the ntfs partition, enter:
+  # mount -t ntfs-3g /dev/sda1 /mnt/ntfs
+
+You can use regular Unix commands to copy or access the files:
+  $ df -h
+  $ mount
+  $ cd /mnt/ntfs
+  $ cp foo /tmp
+
+How Do I Unmount NTFS Partition?
+Type the following command:
+  # umount /mnt/ntfs
+
+=======================================================================================
+var.2.
+
+Identify NTFS Partition
+
+To find out NTFS Partitions in Linux.
+  # fdisk -l
+
+Mount NTFS partition
+First create a mount point to mount the NTFS partition.
+  # mkdir /mnt/ntfs
+
+Simply run the following command to mount the partition. Replace sda1 with your actual partition found.
+  # mount -t ntfs-3g /dev/sda1 /mnt/ntfs
+
+Once it’s mounted on /mnt/ntfs, you may use regular Linux ls -l command to list the content of mounted filesystem.
+
+If you want to make mount point permanent at the boot time, then simple add the following line at the end of /etc/fstab file.
+This will remain as permanent.
+
+  /dev/sda1    /mnt/usb    ntfs-3g        defaults    0    0
+
+Umount NTFS Partition
+Simply, use the following command to unmount the mounted partition.
+
+  # umount /mnt/usb
+
+=======================================================================================
+
+
+
+

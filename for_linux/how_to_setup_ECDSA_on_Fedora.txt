@@ -1,0 +1,222 @@
+﻿How to Using ECC in OpenSSL and strongSwan on Fedora:
+
+You can test that ECC is supported now by running the command:
+
+	# openssl ec -help
+	# openssl ecparm
+	# Cipher commands (see the `enc' command for more details) here search for DSA
+
+Red Hat is currently not supplying Elliptic Curve Crytography (ECC) in binary packages due to concerns about patents. 
+There are various opinions about this subject and other Linux distributions such as Debian and Ubuntu have included ECC.
+For those who want or need ECC (for example, to interoprate with a VPN using X.509 ECDSA certificates or to use ECC-based smartcards) it is necessary to rebuild the Fedora OpenSSL package and related packages such as strongSwan
+
+Here I describe how to make the rebuild using the original sources and Fedora spec file to stay as close to the original Fedora binary as possible. 
+
+The procedure has been tested on Fedora 19 but can be adapted for other Fedora versions and/or RHEL/Centos/EPEL users.
+Prepare the system
+
+As root, install the necessary tools and dependencies for building. Remove the old openssl-devel package so it won't cause any problems during build.
+
+	rpm -e openssl-devel
+	yum install rpm-build krb5-devel zlib-devel gcc \
+	   gmp-devel libcurl-devel openldap-devel \
+	   NetworkManager-devel NetworkManager-glib-devel sqlite-devel
+
+Set up an rpmbuild environment:
+
+If you haven't used rpmbuild before, it is necessary to set up a small config file and directory tree for package building. 
+The following commands will do that:
+
+	[ ! -e ~/.rpmmacros ] && \
+		echo '%_topdir      %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+	[ ! -d rpmbuild ] && mkdir rpmbuild
+	cd ~/rpmbuild
+	mkdir -p BUILD BUILDROOT RPMS/i386 RPMS/x86_64 SOURCES SPECS SRPMS
+
+Obtain the packages and build
+
+Here we download the source packages from Fedora and apply a small patch to enable the ECC algorithms. 
+This code can be cut and pasted into a script.
+
+	cd ~/rpmbuild/SRPMS
+	wget http://dl.fedoraproject.org/pub/fedora/linux/releases/19/Everything/source/SRPMS/o/openssl-1.0.1e-4.fc19.src.rpm
+	wget http://dl.fedoraproject.org/pub/fedora/linux/releases/19/Everything/source/SRPMS/s/strongswan-5.0.2-2.fc19.src.rpm
+	rpm -i openssl-1.0.1e-4.fc19.src.rpm
+	rpm -i strongswan-5.0.2-2.fc19.src.rpm
+	cd ../SOURCES
+	wget http://www.openssl.org/source/openssl-1.0.1e.tar.gz
+	cd ../SPECS
+	wget http://zxvdr.fedorapeople.org/openssl.spec.ec_patch
+	#Fedora's SRPM has a modified source, must use the original
+	patch -p0 < openssl.spec.ec_patch
+	sed -i -e 's/-usa.tar.xz/.tar.gz/' openssl.spec
+	rpmbuild -bb openssl.spec
+
+Install the OpenSSL packages
+
+The strongSwan build script will detect the OpenSSL ECDSA functionality and enable the corresponding code in strongSwan. 
+Therefore, it is necessary to install the OpenSSL packages now, before building strongSwan:
+
+	cd ~/rpmbuild/RPMS/$(uname -i)
+	rpm -Uvh --force \
+		openssl-1.0.1e*rpm \
+		openssl-devel-1.0.1e*rpm \
+		openssl-libs-1.0.1e*rpm
+
+You can test that ECC is supported now by running the command:
+
+	openssl ec -help
+
+If you receive the help text, ECC is supported.
+Rebuild the strongSwan packages
+
+The strongSwan package does not need to be modified or patched in any way. 
+When it builds, it will dynamically detect the ECDSA support in OpenSSL and the strongSwan package will support it too:
+
+	cd ~/rpmbuild/SPECS
+	rpmbuild -bb strongswan.spec
+
+Now install the binary packages:
+
+	cd ~/rpmbuild/RPMS/$(uname -i)
+	rpm -Uvh --force \
+		strongswan-5*rpm \
+		strongswan-tnc-imcvs*rpm
+
+Testing strongSwan is relatively easy, just try creating and viewing an ECDSA key. 
+Note that on Fedora, the strongSwan command utility "ipsec" is actually invoked using the command "strongswan":
+
+	cd /tmp
+	strongswan pki -g --type ecdsa --size 384 > myKey.der
+	strongswan pki -a --type ecdsa-priv --in myKey.der
+	private key with:
+	pubkey:    ECDSA 384 bits
+	keyid:     66:27:29:e3:b2:e2:1f:81:fd:7b:25:86:59:86:5b:25:8f:84:6d:83
+	subjkey:   28:50:c3:9e:9c:ad:04:a8:db:72:47:f9:18:37:00:ad:ad:03:9f:bc
+
+Troubleshooting
+
+If you get this error:
+
+	# ipsec pki
+	/sbin/ipsec: unknown IPsec command "pki" ("ipsec --help" for list)
+
+You are incorrectly invoking the command "ipsec". Use the command "strongswan" instead.
+
+If you get this error:
+
+	plugin 'pkcs7' failed to load: /usr/lib64/strongswan/plugins/libstrongswan-pkcs7.so: cannot open shared object file: No such file or directory
+
+It means you only installed the "strongswan" package and you also need to install the package "strongswan-tnc-imcvs"
+
+-------------------------------------------------------------------------------------
+--> Daniel.Pocock's blog -> http://danielpocock.com/ussing-ecc-ecdsa-in-openssl-and-strongswan-fedora
+
+Comments:
+
+Hi,
+thank you for your tutorial. Some notes:
+
+    mkdir rpmbuild # it would be better to use mkdir ~/rpmbuild
+    diff ~/rpmbuild/SPECS/strongswan.spec* # few changes in order to build it properly
+    215,220c215,220
+    < %dir %{_libdir}/%{name}/imcvs/imc-attestation.so
+    < %dir %{_libdir}/%{name}/imcvs/imc-scanner.so
+    < %dir %{_libdir}/%{name}/imcvs/imc-test.so
+    < %dir %{_libdir}/%{name}/imcvs/imv-attestation.so
+    < %dir %{_libdir}/%{name}/imcvs/imv-scanner.so
+    < %dir %{_libdir}/%{name}/imcvs/imv-test.so
+    ---
+    > %{_libdir}/%{name}/imcvs/imc-attestation.so
+    > %{_libdir}/%{name}/imcvs/imc-scanner.so
+    > %{_libdir}/%{name}/imcvs/imc-test.so
+    > %{_libdir}/%{name}/imcvs/imv-attestation.so
+    > %{_libdir}/%{name}/imcvs/imv-scanner.so
+    > %{_libdir}/%{name}/imcvs/imv-test.so 
+
+-------------------------------------------------------------------------------------
+Updates for Fedora 20
+Submitted by Ryan on 16/02/2014
+
+I was able to modify a couple of steps and got OpenSSL updated on my Fedora Box. 
+I was not able to build the strongSwan, but I don't need that so it was no biggie.
+
+While in the SOURCES directory, I also had to download a patch to fix "pod syntax" error.
+
+	# wget http://dl.dropbox.com/u/8224157/public/tmp/openssl-1.0.1c-pod_syntax_err...
+
+In order to install the build I had to change the release number to make it work, otherwise I had dependency errors.
+Edit openssl.spec, and change the Release line from 4% to 37%
+
+All other steps were the same.
+
+I was able to run the BitMessage program on my Fedora 20 box.
+Hope others find this useful!
+
+-------------------------------------------------------------------------------------
+=====================================================================================
+II. Other one ->  http://wtogami.blogspot.com/2013/05/openssl-with-ecdsa-for-fedora-18.html
+
+openssl with ecdsa for Fedora 20
+Update: June 5th, 2014 - now openssl-1.0.1e-38 for CVE-2014-0224
+
+	# rpm -qa 'openssl*'
+
+This command will tell you all installed openssl packages which may look something like this:
+
+openssl-libs-1.0.1e-4.fc19.i686
+openssl-libs-1.0.1e-4.fc19.x86_64
+openssl-devel-1.0.1e-4.fc19.x86_64
+openssl-1.0.1e-4.fc19.x86_64
+
+
+Fedora 19 http://193.28.235.60/~warren/openssl/fedora-19/               # -> some openssl packages
+Fedora 20 http://download1.rpmfusion.org/~warren/openssl/fedora-20/     # -> some openssl packages
+
+Download corresponding packages for your distro and arch here.  
+Be sure that you have matching i686 and x86_64.  
+Then use this command to allow them to upgrade.  
+RPMS are GPG signed.
+
+	# rpm -Uvh openssl*.rpm
+
+=====================================================================================
+III. Other one -> for CentOS 6.4 
+|-> http://unix.stackexchange.com/questions/81081/openssl-package-rebuild-centos-6-4
+|-> http://pastebin.centos.org/3070/
+
+How to rebuild openssl 1.0.0 with elliptic curves ("enable-ec"), verified on a fresh AWS Centos 6.4 machine
+
+	# yum -y update   # Update all packages on new machine
+	# yum -y groupinstall 'Development tools'
+	# yum -y localinstall --nogpgcheck http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm   # Install EPEL (EL6 extra packages) repository
+	# yum -y install fedora-packager   # Install mock from EPEL repository
+	# userdel -rf abcd ; useradd -G mock abcd ; su abcd
+	# cd ~ ; curl -O http://vault.centos.org/6.4/os/Source/SPackages/openssl-1.0.0-27.el6.src.rpm
+	# /usr/bin/mock ~/openssl-1.0.0-27.el6.src.rpm
+	# rm -rf /home/abcd/build ; mv /var/lib/mock/epel-6-x86_64/root/builddir/build/ /home/abcd ;   # Move to a safe place
+	# cd /home/abcd/build/SOURCES
+	# curl -O http://www.openssl.org/source/openssl-1.0.0.tar.gz   # Download corresponding source tarball from openssl
+	# curl -o patch300.patch http://cvs.openssl.org/patchset?cn=19998   # Download this patch to fix a test error
+	# cd ../SPECS
+	# sed -i -e "s/no-ec/enable-ec/; s/no-ecdh/enable-ecdh/; s/no-ecdsa/enable-ecdsa/" openssl.spec   # Enable EC
+	# sed -i -e "s/^Source1: hobble-openssl/#&/; s/^%.SOURCE1. /#&/" openssl.spec   # Disable the "hobble" script
+	# sed -i -e "s/^Release.*dist\}/&.EC.1/" openssl.spec   # Also change release number by adding .EC.1
+	# sed -i -e "s/-usa.tar.bz2/.tar.gz/" openssl.spec   # Change the source tarball
+	# sed -i -e "s/^Patch78.*/&\nPatch300: patch300.patch\n/" openssl.spec   # Add the new patch
+	# sed -i -e "s/^%patch78.*/&\n%patch300 -p1 \n/" openssl.spec   # Add the new patch again
+	# /usr/bin/mock --buildsrpm --spec  ~/build/SPECS/openssl.spec --sources  ~/build/SOURCES   # Do a source rebuild
+	# cp /var/lib/mock/epel-6-x86_64/root/builddir/build/SRPMS/openssl-1.0.0-27.el6.EC.1.src.rpm /home/abcd
+	# cd ~ ; /usr/bin/mock --rebuild openssl-1.0.0-27.el6.EC.1.src.rpm
+ 	
+	
+=====================================================================================
+IV. Other one ->
+	
+	
+	
+	
+	
+	
+
+	

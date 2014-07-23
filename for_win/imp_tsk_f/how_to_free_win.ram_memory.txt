@@ -1,0 +1,36 @@
+1. Open a Notepad file.
+Type the following code in Notepad.
+	FreeMem=Space(64000000) if your RAM is below 1GB.
+	FreeMem=Space(51200000) if your RAM is 512 MB
+	FreeMem=Space(102400000) if your RAM is 1GB
+	FreeMem=Space(204800000) if your RAM is 2GB
+	FreeMem=Space(409600000) if your RAM is 4GB and so on. 
+Save it as a VBS file. 
+2. Open a new Notepad file.	
+Type the following code in Notepad.
+	mystring=(80000000)
+Save it as a VBS file. 
+
+3. Run the two VBS files by double clicking on them.
+
+- Is it true that adding .vbs file to my string speeds up my pc?
+Yes, it is true that adding .vbs file embedded with the right code could actually speed up a PC. 
+A .vbs extension is an extension associated with VBScript files. VBScript is a scripting language for Microsoft. 
+In layman's speak, VBScript is capable of communicating and issuing commands to your PC's Microsoft Windows operating system via a certain set of codes.
+
+Apparently, VBScript has a certain code for telling the operating system to detect and "free up" unused RAM in your PC. 
+And that exactly is the code embedded within the vbs file discussed in this article. 
+
+- How does it work? 
+
+When you run the .vbs file in your computer, it forces the computer to clear the "idle" data stored in RAM or the data left by programs you recently used and terminated. 
+With additional vacant RAM, you will now have more RAM to allot to programs you wish to run.
+
+The cleared up idle data is not totally terminated. 
+It is relegated to the "virtual memory" or swap file of the PC. 
+A virtual memory is a portion of your PC's hard disk that is used by the operating system as if it was an extension of the RAM. 
+Because hard disks have relatively slower access rates than the true physical RAM, it is not advisable to use excessive amounts of virtual memory for running programs as it bogs down the PC. 
+In this case, because what we are trying to get rid of are data that are not essential for any presently running programs or processes, it is okay to utilize the virtual memory. 
+
+
+

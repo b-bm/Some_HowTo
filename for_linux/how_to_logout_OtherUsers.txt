@@ -1,0 +1,23 @@
+﻿How to logout some diferent user with command line:
+
+A root user can logout and kill any user session forcefully using the following commands:
+
+1. pkill command -> Kill processes by name.
+
+2. kill command -> terminate or signal a process.
+
+3. logout command -> Logout of a login shell. 
+This command can be used by normal users to end their own session.
+
+WARNING: Don't use this for ROOT
+
+The syntax is:
+
+	# pkill -KILL -u {username}
+	# pkill -KILL -u some_user
+
+
+
+
+
+

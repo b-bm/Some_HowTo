@@ -1,0 +1,6 @@
+﻿http://linuxconfig.org/ffmpeg-audio-format-conversions
+
+
+Convert aac to mp3 with ffmpeg:
+
+ffmpeg -i audio.aac -acodec libmp3lame audio.mp3

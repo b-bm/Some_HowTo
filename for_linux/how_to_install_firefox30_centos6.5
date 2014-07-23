@@ -1,0 +1,44 @@
+Install firefox 30
+
+var.1.
+
+## Check Availability of Firefox 30 in RHEL/CentOS 6.5/6.4/6.3/6.2/6.1/6.0
+yum --enablerepo=remi list firefox
+
+## Check Availability of Firefox 30 in Fedora 19/18/17/16 ##
+# yum list firefox
+
+## Install or Update Firefox 30 in RHEL/CentOS 6.5/6.4/6.3/6.2/6.1/6.0 ##
+# yum --enablerepo=remi install firefox
+
+## Install or Update Firefox 30 in Fedora 19/18/17/16 ##
+# yum install firefox
+
+===============================================================================================================================
+
+var.2.
+
+Step 1: Download Firefox 30 Archive
+Download the Firefox 30 source code as per your system platform using one of following set of commands.
+
+For 32-Bit Systems 
+  # cd /usr/local
+  # wget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/30.0/linux-i686/en-US/firefox-30.0.tar.bz2
+
+Step 2: Extract Archive
+
+Extract the downloaded archive file on your system using following command.
+
+  # tar xvjf firefox-30.0.tar.bz2
+
+Step 3: Configure Firefox
+
+To install firefox we don’t need to make any installation.We just need to create a softlink of firefox binary file to systems bin directory to make it accessible from anywhere in system.
+
+  # ln -s /usr/local/firefox/firefox /usr/bin/firefox
+
+Now start firefox using command line
+
+  # firefox
+
+

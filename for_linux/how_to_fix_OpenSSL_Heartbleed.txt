@@ -1,0 +1,98 @@
+﻿OpenSSL and Heartbleed
+What versions of the OpenSSL are affected?
+
+- OpenSSL 1.0.1 through 1.0.1f (inclusive) are vulnerable
+- OpenSSL 1.0.1g is NOT vulnerable
+- OpenSSL 1.0.0 branch is NOT vulnerable
+- OpenSSL 0.9.8 branch is NOT vulnerable
+
+
+For update/upgrade -> OpenSSL version:
+
+	# openssl version -a -> show openssl version and dir.
+	# openssl version -b -> show build date
+	or:
+	# rpm -q -a | grep "openssl" -> show openssl version
+
+then:
+	# yum update -> update all OS dependence packages
+	or:
+	# yum update openssl -> update only openssl dependence packages
+
+then:
+	# yum upgrade openssl -> upgrade OpenSSL version
+
+OR to update/upgrade OpenSSL version:
+	# yum -y install openssl
+	or:
+	For a 64 bit system Fedora 20:
+		# yum -y install koji
+		# koji download-build --arch=x86_64 openssl-1.0.1e-37.fc20.1
+		# yum localinstall openssl-libs-1.0.1e-37.fc20.1.x86_64.rpm  openssl-1.0.1e-37.fc20.1.x86_64.rpm
+	
+	For a 32 bit system Fedora 19:
+		# yum -y install koji
+		# koji download-build --arch=i686 openssl-1.0.1e-37.fc19.1
+		# yum localinstall openssl-1.0.1e-37.fc19.1.i686.rpm
+
+Then restart the system:
+	# shutdown -r now
+	or:
+	# shutdown -rf now
+
+Note: Be sure to manually restart any services that use OpenSSL.
+Note: Pay close attention to the Fedora version number. 
+The trailing ".1" tells you if it is patched or not. 
+If your package does not have the ".1" at the end, you are still vulnerable!!!
+Pay attention to the "built on": line. Versions built before 7th April 2014 are vulnerable.
+
+SOME MACHINE OUTPUTS:
+
+[root@Plasidity yum.repos.d]# pwd
+/etc/yum.repos.d
+
+[root@Plasidity yum.repos.d]# openssl version -a
+OpenSSL 1.0.1e-fips 11 Feb 2013
+built on: Tue Apr  8 00:29:02 UTC 2014
+platform: linux-elf
+options:  bn(64,32) md2(int) rc4(1x,char) des(ptr,risc1,16,long) idea(int) blowfish(idx)
+compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN ...some thing...some thing...-DVPAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
+OPENSSLDIR: "/etc/pki/tls"
+engines:  dynamic
+
+[root@Plasidity yum.repos.d]# openssl version -b
+built on: Tue Apr  8 00:29:02 UTC 2014
+
+[root@Plasidity yum.repos.d]# rpm -q -a | grep "openssl"
+openssl-libs-1.0.1e-37.fc19.1.i686
+openssl-1.0.1e-37.fc19.1.i686
+
+
+SOME INFO:
+
+	http://heartbleed.com
+
+	http://www.openssl.org
+
+	http://www.openssl.org/source/
+
+	http://www.openssl.org/related/binaries.html
+
+	http://slproweb.com/products/Win32OpenSSL.html
+
+	http://cygwin.com/install.html
+
+Some info about how to fix it:
+
+	http://www.youtube.com/watch?v=sq7Eib02Rb8
+
+	https://library.linode.com/security/openssl-heartbleed
+
+	https://support.crucialp.com/index.php?/Knowledgebase/Article/View/1478/11/how-to-protect-your-server-against-the-heartbleed-openssl-vulnerability
+
+	https://www.digitalocean.com/community/articles/how-to-protect-your-server-against-the-heartbleed-openssl-vulnerability
+
+	
+	
+	
+	
