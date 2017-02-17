@@ -3,6 +3,7 @@
 Red Hat/Fedora Core/CentOS Linux:
 Type the following command to get list of all installed software
 # rpm -qa | less
+# rpm -qa | grep 'something'
 
 Debian Linux:
 Type the following command to get list of all installed software:

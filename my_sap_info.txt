@@ -1,0 +1,885 @@
+﻿MY SAP info:
+#39050967
+BGBOVAR
+boyan.varbev@bg.abb.com
+
+
+<<< MY Abbreviations >>>
+
+- it -> инфо тип
+- wt -> под инфо тип
+- f76/пф/ф76 -> форма 76
+-  ->
+-  ->
+-  ->
+-  ->
+
+<<< Some Abbreviations >>>
+
+- ДВПР - Доп.Възнаграждение Постигнати Резултати 
+- ДВТД - Доп.Възнаграждение Трудова Дисциплина (=90лв)
+- ДВЛО - Доп.Възнаграждение Липса на Отсъствия (=30лв)
+- PDAs = Performance Development and Appraisal
+-
+
+
+<<< Some codes >>>
+
+- BC - blue collars - BE = BC worker				-> производство
+- WC - white collars - WE = White collar employe	-> администрация
+
+- PA20 Display HR Master Data 				-> форма само за четене - reading only
+- PA30 Maintain HR Master Data 				-> форма работна - editable
+- PA40 Personnel Actions 					-> договори / заповеди
+- PPOMC Change Organization and Staffing 	-> структура
+- За да се види името на дадена транзакция в системата 
+	|-> Пускаме транзакцията, когато сме в начален екран -> от менюто се избира -> System -> Status.
+-  ->
+-  ->
+-  ->
+
+
+<<< ITs and WT/wt >>>
+
+- it 2006 = Absence Quotas -> квота за платен / неплатен отпуск / допълнителни пл.отпуски
+	|-> wt 01 = Standard -> платен отпуск
+	|-> wt 30 = Unpaid leave EE <=30 -> неплатен отпуск зачетен за стаж
+	|-> wt 21 = Paid study leave -> за обучение 
+	|-> wt 02 = Prolonged -> допълнителен (за ТЕЛК)
+	|-> wt  =  -> 
+	|-> wt  =  ->
+	
+- it 2001 = Absences -> отсъствия
+	|-> wt 0100 = Annual Leave -> платен отпуск
+	|-> wt 0400 = Unpaid leave EE -> неплатен отпуск зачетен за стаж
+	|-> wt 0600 = Sick Leave - init.(болничен първичен-общо заб.пр.01)
+	|-> wt 0601 = Sick Leave - cont.(болничен продължение-общо заб.пр.01)
+	|-> wt 0615 = Accident at home - init.(нетрудова злополука първичен пр.06)
+	|-> wt 0616 = Accident at home - cont.(нетрудова злополука продължение пр.06)
+	|-> wt 0635 = FM care - init. (придружаване на болен над 18г. първичен пр.27) 
+	|-> wt 0430 = Non-excuse leave (Самоотлъчка) 
+	|-> wt  = 
+	|-> wt  = 
+	|-> wt  = 
+	|-> wt 0303 = SR - Relative's death -> друг вид пл.отп. за смърт на роднина
+	|-> wt 0304 = SR - Court invitation -> друг вид пл.отп. призовка
+	|-> wt 0211 = Paid study leave -> пл.отпуск за обучение		 
+	|-> wt  =  ->  
+	|-> wt  =  ->  
+	|-> wt  =  ->  
+	|-> wt  =  ->  
+	|-> wt  =  ->  
+	|-> wt  =  -> 
+	
+- it 935 = Contract Elements (BG) -> трудови договори
+- it 937 = Previous Employers (BG)
+- it 939 = Tax Properties BG -> експертни решения от ТЕЛК ; Stop health ins. calc. + GVRS fees -> Спира изчисленията за Здравни Вноски - ЗОВ ( за чужденци ); 
+ 
+- it 11 = External Transfers -> запори, etc.... 
+	|-> wt ME10 = Garnishment -> запори
+	|-> wt  =  -> 
+	
+- it 105 = Communication -> for GEID;
+- it 14 = Recurring Payments/Deductions -> ваучери; 
+- it 15 = Additional Payments -> бонуси; суми по гр.дог.;  
+
+- it 2010 = Employee Remuneration Info -> Извънреден труд
+	|-> wt 0110 = Overtime - SAWT 50% -> Раковски - празнични дни
+	|-> wt 0115 = Overtime - weekdays 150% -> Раковски - делнични дни
+	|-> wt 0116 = Overtime - weekend 175% -> Раковски - съботи и недели
+	|-> wt 0120 = Overtime - holiday 200% -> официални празници
+
+- it 416 = Time Quota Compensation -> чл.224
+- it 655 = ESS Settings Remuneration Statement -> при създаване на WE акаунт (акаунт за отпуски)
+- it 9904 = IT User -> при създаване на WE акаунт (права за достъп)
+- it 9913 = Termination Reasons
+- it 9910 = ABB Bonuses (въвежда се период и % на бонуса)
+- it 9911 = Bonus criteria 
+- it 19 = Monitoring of Tasks 
+	|-> wt MM = Member Gets Member - (въвежда се инфо за wt 0244 Bonus Referral)
+
+- it 937 = Previous Employers (BG) 
+- 
+- 
+- 
+-  -> 
+-  ->
+
+<<< F76 info >>>
+
+- 8/1 или 8/2 -> 8 часа 1-ва смяна или 8 часа 2-ра смяна
+- 7 (само цифра) -> количество часове за нощен труд
+-  ->
+-  ->
+-  ->
+
+
+<<< ОТПУСКИ-ОТСЪСТВИЯ РЕД ЗА ОБРАБОТКА >>>
+
+I. Разделяме ги по видове
+
+II. In SAP:
+1. PA30 = Maintain HR Master Data
+- it = 2001 -> wt = в зависимост от отсъствието
+
+2. F5 
+	|-> проверка на датите + ENTER
+4. CTRL.+S 
+
+- NOTE: КВОТАТА ПЛ.ОТПУСК ЗА ОБУЧЕНИЕ Е ОТ 01.09.текуща година ДО 31.08.следваща година !!!
+
+
+<<< БОЛНИЧНИ РЕД ЗА ОБРАБОТКА >>>
+
+- Болничните 1-во се въвеждат в регистъра и след това в SAP. На болничния се записва пореден номер + дата от регистъра !!!
+I. Регистър болнични в:
+	\\ R:\Payroll_and_PA\Rakovski\Register_Rakovski_2014.xlsx |-> sheet = Sick Leaves 
+
+II. In SAP:
+1. PA30 = Maintain HR Master Data
+- it = 2001 
+			-> wt = 0600 Sick Leave - init.(болничен първичен-общо заб.пр.01)
+			-> wt = 0601 Sick Leave - cont.(болничен продължение-общо заб.пр.01)
+			-> wt = 0615 Accident at home - init.(нетрудова злополука първичен пр.06)
+			-> wt = 0616 Accident at home - cont.(нетрудова злополука продължение пр.06)
+			-> wt = 0625 Sick child care - init.(придружаване на дете до 18г. първичен пр.26)
+			-> wt = 0635 FM care - init. (придружаване на болен над 18г. първичен пр.27)
+			-> wt = 
+			-> wt = 
+			-> wt = 
+2. F5  
+	|-> Прозорец Create Absences 
+		-> Confirmation = ДАТА ОТ РЕГИСТЪРА; 
+		-> Superior = СЕРИЯ/ГОДИНА/НОМЕР НА БОЛНИЧЕН; 
+		-> Reference # = НОМЕРА ОТ РЕГИСТЪРА 
+ 
+3. Menu SAP -> GO TO -> Monitor illnesses
+	|-> Прозорец Create Additional Abs.Data -> бутон Variable Data 
+		-> EI = 18
+		-> Event Date = ДАТА НА ИЗДАВАНЕ НА БОЛНИЧНИЯ 
+		-> Comments = 1 (означава броя на приложенията)
+ 
+4. ENTER + CTRL.+S ДО ПОКАЗВАНЕ НА НАЧАЛЕН ЕКРАН
+
+- NOTE: 
+	1. ПРОВЕРКА ЗА ВЪВЕДЕНИЯ ЗАПИС СЕ ПРАВИ, КАКТО ЗА ВСИЧКИ ОСТАНАЛИ ОТСЪСТВИЯ
+	2. ИНФО ЗА БОЛНИЧНИ БР. И РАЖДАНЕ + МАЙЧИНСТВО ЗА SAP:
+		I. Болнични Бр.Р. 
+		-> 1 болничен за бр.р. - wt = 680 Gravidity 
+		-> 2 болничен за бр.р. - wt = 681 Birth
+		-> 3 болничен за бр.р. - wt = 682 Maternity
+		-> 4 болнични/майчинство от 135 ден до 410 ден - wt = 687 Maternity-135-410
+		II. Майчинство до 2г.
+		-> wt = 683 Child care
+		III. Неплатено Майчинство
+		-> wt = 684 Child care unpaid
+	3. ПРИЧИНА "16 - ТРУДОУСТРОЯВАНЕ-ОБЩО ЗАБОЛЯВАНЕ" НЕ СЕ ВЪВЕЖДА В SAP САМО СЕ ЗАВЕЖДА В РЕГИСТЪРА ЗА НАША ВЪТРЕШНА ИНФОРМАЦИЯ !!!
+
+
+<<< ОСВОБОЖДАВАНЕ (ПРЕКРАТЯВАНЕ НА ДОГОВОР) РЕД ЗА ОБРАБОТКА >>>
+
+- Прекратяване на договор 1-во се въвежда в регистъра и след това в SAP. Записва се пореден номер + дата от регистъра !!!
+- Пореден # = Последните цифри от булстата + номер по ред -> 2300X
+-> Раковски = 23
+
+I. Регистър в:
+	\\ R:\Payroll_and_PA\Rakovski\Register_Rakovski_2014.xlsx |-> sheet = Termination
+
+II. In SAP:
+1. PA40 = Personnel Actions:
+	|-> from = ПОСЛЕДЕН РАБОТЕН ДЕН
+	|-> В Personnel Actions таблицата маркираме ред Leaving -> Execute - F8
+	|-> В Прозорец Copy Actions -> Reason for Action = намираме чл. за освобождаване -> Enter -> Ctrl+S -> 
+		-> Yes (за потвърждение на датата, когато вече не е на работа + освобождаване на позицията, която заема) 
+	|-> Прозорец Заплата (Delimit Basic Pay) -> Next
+	|-> Прозорец за Ваучери (Delimir Recurring Payments/Deductions) -> Маркираме реда + Delimit (иконата до next с въпросителната)
+	|-> Прозорец за Тр.Договор (Copy Contract Elements) -> Order Number = номер на заповедтта от регистъра -> Date of Signature = датата за считано от ->
+		-> NAP Status = N Notify NAP -> Enter + Save(ctrl+S) 
+	|-> Прозорец за отпуск (Delimit Absence Quotas) -> Маркиране на ред + Delimit -> Отваря се малък прозорец, в който се избира Annual leave + Enter
+	|-> Прозорец за ... (Create Time Quota Compensation) -> Start = ПОСЛЕДЕН РАБОТЕН ДЕН -> 
+		-> No. to Compensate = взимат се дните от Absence Quotas колона Rem.(това са дните за чл.224) -> Enter + Save
+	|-> Ако е WC Прозорец за ограничаване на акаунта (Delimit Communication) -> Маркираме реда + Delimit
+	|-> 
+2. Ако е WC e-mail до ITs за да се заличи акаунта
+3. Темплейти -> попълване на заповедтта
+	\\
+
+-  ->
+-  ->
+-  ->
+
+
+<<< НАЗНАЧАВАНЕ(СКЛЮЧВАНЕ НА ДОГОВОР) РЕД ЗА ОБРАБОТКА - WE >>>
+
+I. Регистър в:
+	\\ R:\Payroll_and_PA\Rakovski\Register_Rakovski_2014.xlsx |-> sheet = Cntracts
+- пореден номер и дата (Пореден # = Последните цифри от булстата + номер по ред -> 2300X)
+-> Раковски = 23
+
+II. Темплейти -> попълване на договор, Дл.Характеристика и печат на комплект от документи.
+	- Договори WC:
+	\\R:\Payroll_and_PA\Rakovski\Nataliya\Contracts\TEPLATES_contracts_annex_termination
+	
+	- Дл.Характеристики:
+	\\R:\Documents_by_post\Rakovski\JDs
+
+	- Комплект документи за печат:
+	\\R:\Payroll_and_PA\Razni\Назначаване-Vanya\Rakovsky\Dok za nazna4avane
+
+III. In SAP:
+1. PPOME = Change Organization and Staffing: 
+	|-> СМЕНЯ СЕ ДАТАТА НА ПЪРВО ЧИСЛО ОТ ТЕКУЩИЯ МЕСЕЦ ВИНАГИ !!!;
+		Създава се позицията към която ще се асоцира новия договор (човек); 
+		Може да се копира съществуваща позиция Х-пъти ако има Х-договора;
+		Въвежда се кост центъра;
+		Записва се ID-то на позицията(10022852) по-късно ще бъде необходима;
+	
+2. PA40 = Personnel Actions:
+-  
+	|-> From = считано от (ДА СЕ ЯВИ НА РАБОТА)
+	|-> Personnel Actions -> Hiring -> Personnel Area = избира се мястото (Раковски 1/2); EE Group = Active (избира се вида на договора: основен = Active, временен = Temporary, 2-ри, др.); 
+		EE Subgroup = WE (White collar employe - избира се групата WC/BC) -> Execute
+	|-> Create Actions -> Reason for Actions = 35 HC:Other reason + Enter -> Връща ни в Create Actions -> Enter и получава SAP номер + SAVE
+	|-> Прозорец Create Organization Assignment -> Subarea = Rakovski\Sofia\Petrich...; Contract = Indirect; Position = 10022852 (ID-то на позицията от структурата); 
+		PayrAdmin = бизнес партнера (02-Венета, 06-Цветелина) -> Enter + SAVE
+	|-> Прозорец за лични данни Create Personal Data -> Title = Mr.\Mrs; ИМЕНА БГ -> Име,Презиме,Фамилия + ИМЕНА EN -> Име = Name(Boyan), ФАМИЛИЯ = NAME(VARBEV);
+		Birth Date = дата на раждане; EGN = ЕГН; Language = език; Nationality = националност -> SAVE
+	|-> Прозорец Create Communication -> SystemID = +35932998800 (винаги е този) -> SAVE + Enter до отваряне на следващия прозорец
+	|-> Прозорец за ЛК Create Personal IDs -> ID Number = # карта; Date of Issue = дата на издаване; Place of Issue = МВР + Град -> SAVE
+	|-> Прозорец личен + сл.адрес = БГ език Create Addersses -> личния адрес ; сл.адрес - П.К. = 4142 (Раковски), ул.Индустриален Път 14\18 (14=база1, 18=база2) + SAVE
+	|-> Прозорец за Тр.Договор Create Contract Elements -> Contract Type = 1 Labour Contract I; Contract type NAP = ; Contract # = #договор ; Contr\Add Start Date = дата да се яви на работа; 
+		Date of Signature = дата на подписване\регистр.; Probation Period = check it; NAP Status = N Notify NAP; Notyce Period ER = предизвестие 3\1(WC = 3months, BC = 1month); 
+		Profession = НКПД; Time System = WC - Daily Flexibile, монтажници - Summarized; Place of Work = RAKOVSKI\SOFIA\PETRICH (с големи EN букви мястото на работа); 
+		Payment System = by time -> SAVE 
+	|-> Прозорец Create Contract Elements -> ПРОПУСКАМЕ ГО - NEXT 
+	|-> Прозорец Create Planned Wirking Time -> Time Schedule rule = FLEX01 -> Enter + Save 
+	|-> Прозорец Create Basic Pay -> Group = Слагаме 1-ва позиция; В Таблицата ред Basic pay Salaried графа Amount = брутна заплата, 
+		ред Discipline bonus ИЗТРИВАМЕ ГО -> Enter + Save  
+	|-> Прозорец за Ваучери Create Recurring Payments\Deductions -> Amount = сума за ваучерите -> Enter + Save
+	|-> Прозорец Create Education -> Попълват се данните на БГ 
+	|-> Прозорец Create Previous Empl. -> ако има данни се попълва, ако не - NEXT
+	|-> Прозорец отпуски Create Absence Quotas -> from = дата да се яви на работа; to = 31.12.година -> Save
+	|-> Прозорец Create Bank Details -> ако има данни се попълва, ако не - NEXT
+	|-> Прозорец Create Time Sheet Defoults -> NEXT
+	|-> Прозорец Create IT User -> слагаме отметки на необходимите акаунти + SAVE
+	|-> Прозорец .... -> отметка + Save
+	|-> Прозорец .... -> SAVE
+	|-> Прозорец 
+	
+3. END/FINISH
+-  ->
+-  ->
+-  ->
+
+
+<<< НАЗНАЧАВАНЕ(СКЛЮЧВАНЕ НА ДОГОВОР) РЕД ЗА ОБРАБОТКА - BE >>>
+
+I. Регистър в:
+	\\ R:\Payroll_and_PA\Rakovski\Register_Rakovski_2014.xlsx |-> sheet = Cntracts
+- пореден номер и дата (Пореден # = Последните цифри от булстата + номер по ред -> 2300X)
+-> Раковски = 23
+
+II. Темплейти -> попълване на договор, Дл.Характеристика и печат на комплект от документи.
+	- Договори BC:
+	\\ R:\Payroll_and_PA\Rakovski\Nataliya\Contracts\Assemler
+	\\ R:\Payroll_and_PA\Rakovski\Nataliya\Contracts\Machine operator
+	- Попълват се данните в файл list.xlsx  
+	- След това във файл contract.docx -> корекция на датата + заплата + датите на Уведомление по чл.62, ал.5 от Кодекса на труда
+	- MAILINGS -> Finish&Merge -> Edit Individual Documents -> All + OK 
+
+	- Дл.Характеристики:
+	\\R:\Documents_by_post\Rakovski\JDs
+
+	- Комплект документи за печат:
+	\\R:\Payroll_and_PA\Razni\Назначаване-Vanya\Rakovsky\Dok za nazna4avane
+
+III. In SAP:
+1. PPOME = Change Organization and Staffing: 
+	|-> СМЕНЯ СЕ ДАТАТА НА ПЪРВО ЧИСЛО ОТ ТЕКУЩИЯ МЕСЕЦ ВИНАГИ !!!;
+		Създава се позицията към която ще се асоцира новия договор (човек); 
+		Може да се копира съществуваща позиция Х-пъти ако има Х-договора;
+		Въвежда се кост центъра;
+		Записва се ID-то на позицията(10022852) по-късно ще бъде необходима;
+	|-> 
+	
+2. PA40 = Personnel Actions:
+-  
+	|-> From = считано от (ДА СЕ ЯВИ НА РАБОТА)
+	|-> Personnel Actions -> Hiring -> Personnel Area = избира се мястото; EE Group = Active (избира се вида на договора: основен, 2-ри, др.); 
+		EE Subgroup = BE + Execute
+	|-> Create Actions -> Reason for Actions = 35 HC:Other reason + Enter -> Връща ни в Create Actions -> Enter и получава SAP номер + SAVE
+	|-> Прозорец Create Organization Assignment -> Subarea = Rakovski\Sofia\Petrich...; Contract = Direct; Position = 10022852 (ID-то на позицията от структурата); 
+		PayrAdmin = бизнес партнера (02-Венета, 06-Цветелина) -> Enter + SAVE
+	|-> Прозорец за лични данни Create Personal Data -> Title = Mr.\Mrs; ИМЕНА БГ -> Име,Презиме,Фамилия + ИМЕНА EN -> Име = Name(Boyan), ФАМИЛИЯ = NAME(VARBEV);
+		Birth Date = дата на раждане; EGN = ЕГН; Language = език; Nationality = националност -> SAVE
+	|-> Прозорец Create Communication -> SystemID = +35932998800 (винаги е този) -> SAVE + Enter до отваряне на следващия прозорец
+	|-> Прозорец за ЛК Create Personal IDs -> ID Number = # карта; Date of Issue = дата на издаване; Place of Issue = МВР + Град -> SAVE
+	|-> Прозорец личен + сл.адрес = БГ език Create Addersses -> личния адрес ; сл.адрес - П.К. = 4142 (Раковски), ул.Индустриален Път 14\18 (14=база1, 18=база2) + SAVE
+	|-> Прозорец за Тр.Договор Create Contract Elements -> Contract Type = 1 Labour Contract I; Contract type NAP = ; Contract # = #договор ; Contr\Add Start Date = дата да се яви на работа; 
+		Date of Signature = дата на подписване\регистр.; Probation Period = check it; NAP Status = N Notify NAP; Notyce Period ER = предизвестие 1(BC = 1month); 
+		Profession = НКПД; Time System = Summarized (монтажници,...); Place of Work = RAKOVSKI\SOFIA\PETRICH (с големи EN букви мястото на работа); 
+		Payment System = by time -> SAVE 
+	|-> Прозорец Create Contract Elements -> ПРОПУСКАМЕ ГО - NEXT 
+	|-> Прозорец Create Planned Wirking Time -> Time Schedule rule = FLEX01 -> Enter + Save 
+	|-> Прозорец Create Basic Pay -> Group = Слагаме 1-ва позиция; В Таблицата ред Basic pay Salaried графа Amount = брутна заплата, 
+		ред Discipline bonus = 90 (проверка за сумата) -> Enter + Save  
+	|-> Прозорец за Ваучери Create Recurring Payments\Deductions -> Amount = сума за ваучерите -> Enter + Save
+	|-> Прозорец Create Education -> Попълват се данните на БГ 
+	|-> Прозорец Create Previous Empl. -> ако има данни се попълва, ако не - NEXT
+	|-> Прозорец отпуски Create Absence Quotas -> from = дата да се яви на работа; to = 31.12.година -> Save
+	|-> Прозорец Create Bank Details -> ако има данни се попълва, ако не - NEXT
+	|-> Прозорец Create Time Sheet Defoults -> NEXT
+	|-> Прозорец .... -> SAVE
+	|-> Прозорец 
+	
+3. END/FINISH
+-  ->
+-  ->
+-  ->
+
+
+<<< ГР. ДОГОВОРИ РЕД ЗА ОБРАБОТКА >>>
+
+I. In SAP:
+1. PA30 = Maintain HR Master Data 
+	-> Personnel no. = find person (=име или номер)
+	-> Period = Date (01.12.2014) (NO End Date/ БЕЗ крайна дата)
+	-> it = 15 (Additional Payments) -> wt = M018 (Civil contract)
+
+2. F5
+	-> Amount = Изплатена Сума
+
+3. Ctrl+S (SAVE)
+
+NOTE - Ако искаме да проверим, какво се е записало -> Маркираме All + Overview (иконата Планина+Слънце) 
+-  ->
+-  ->
+-  ->
+
+
+<<< ВАУЧЕРИ - РЕД ЗА ОБРАБОТКА >>>
+
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+
+
+<<< САМО ЗА АРХИВ - ФИШОВЕ - РЕД ЗА ОБРАБОТКА >>>
+
+I. In SAP: - език БГ !!!
+1. Personalistika -> Payroll BG -> Payroll -> Remuneration statement
+	|-> Payroll area = B2 (избира се съответната локация); Избираме Период; Област раб. заплати = B2 (избира се съответната локация); Form name = BG03; 
+	    Print retroactive runs = празно (махаме "Х" за да не се виждат промените ако има такива)
+2. Execute (F8)
+3. System -> List -> Запазване на файл в *.rtf
+
+II. In Word:
+1. Отваря се запазения файл -> Маркира се всичко (Ctrl+A) -> Клик на иконата за параграф, за да се покажат параграфите.
+NOTE: Фишовете трябва да са по 2 на страница без пренасяне.
+2. На VIEW = отметка на Ruler (показва се рулера) наглася се докато не станат по 2 фиша на страница без пренасяне.
+3. Page Layout = A4; Print = 2 pages per sheet; Both Size = Flip
+4. Print.
+
+
+<<< САМО ЗА АРХИВ - ВЕДОМОСТ - РЕД ЗА ОБРАБОТКА >>>
+I. In SAP:
+1. 
+2. 
+3. 
+4. 
+NOTE:
+
+II. In Exel:
+-
+	\\ 
+NOTE: 
+
+1. 
+2. Печат в А3 - цветно
+NOTE: За формат на ведомостта: 
+1. 
+2. 
+3. 
+
+-  ->
+-  ->
+-  ->
+
+
+<<< СЛУЖЕБНИ БЕЛЕЖКИ ЗА ДОХОД - ДЕТСКИ + ОБЩИ >>>
+
+I. In SAP:
+1. 
+2. 
+3. 
+4. 
+
+II. In Word:
+1. 
+2. 
+
+-  ->
+-  ->
+-  ->
+
+
+<<< СЛУЖЕБНИ БЕЛЕЖКИ ЗА ДОХОД - чл.45 Годишна НАП >>>
+
+I. In SAP:
+1. 
+2. 
+3. 
+4. 
+
+II. In Word:
+1. 
+2. 
+
+-  ->
+-  ->
+-  ->
+
+
+<<< РЕГИСТРАЦИЯ ДОГ, ДС, ЗАПОВЕДИ НАП - ФАЙЛ РЕД ЗА ОБРАБОТКА >>>
+
+I. In SAP:
+1. 
+2. 
+3. 
+4. 
+5.
+
+NOTE:
+
+II. e-mail до Божурка с файла за регистрация
+-  ->
+-  ->
+-  ->
+
+
+<<< СПРАВКИ SAP with WAGE TYPE REPORTER >>>
+- Извиква се с транзакция: PC00_M99_CWTP (Wage Type Reporter)
+---------------------------------------------------------------
+	<<< Справка - БРУТО/НЕТО >>>
+- С тази справка може да се извежда дохода бруто и нето за избран период на избрани лица.
+
+1. Извиква се с транзакция: PC00_M99_CWTP (Wage Type Reporter)
+2. Get Variant (2-рата икона/ Shift+F5)
+	|-> Прозорец Find Variant -> Трием от поле Created by юзъра си. -> Execute
+	|-> Прозорец ABAR: Variant Directory of Program H99CWTR0 -> Избира ме си БРУТО-НЕТО справка -> ok/execute
+	|-> Прозорец Wage Type Reporter -> Personnel Number = избираме човека или хората; Period = слагаме желания период; 
+3. Execute (F8)
+---------------------------------------------------------------
+	<<<  >>>
+- 
+
+1.
+|->  
+2. 
+|->  
+---------------------------------------------------------------
+
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+
+
+<<< ВЪВЕЖДАНЕ НА ЕКСПЕРТНО РЕШЕНИЕ ОТ ТЕЛК В SAP >>>
+
+1. Избираме човека 
+	|-> it = 939 Tax properties (BG) + Create (F5)
+	|-> Прозорец Tax properties (BG) -> Start = Първо число на месеца, в който е получено; То = Датата до, която важи;
+		(В МОМЕНТА ПРИ ВЪВЕЖДАНЕ НА ДАТА, ДО КОЯТО ВАЖИ ИЗБИВА ГРЕШКА, ЗА ТОВА СЕ ВЪВЕЖДА ДО БЕЗКРАЙ - 31.12.9999 - ЧАКАМЕ КОРЕКЦИЯ НА SAP)
+		Слагаме отметка на - Tax-free for Disability.
+2. Създаваме квота за допълнителен пл.отпуск в размер на 6 дни за периода на решението !
+	|-> it = 2006 -> wt = 02 Prolonged 
+	|-> 
+
+-  ->
+
+
+<<< ВЪВЕЖДАНЕ НА МЕСЕЧНА СУМА ЗА ЗАПОР В SAP >>>
+
+1. Намираме човека
+2. it = 11 + маркираме All + Overview
+3. Във въведения вече запор само правим корекция на сумата - НИЩО ДРУГО НЕ СЕ ПРОМЕНЯ !!!
+4. Save
+	|-> Ако няма въведен запор го въвеждаме !!!
+	|-> ЗАПОР с БЮДЖЕТНО ПЛАТЕЖНО (ДСИ, РС ...) се въвежда -> Payment method = "Payments to the state" !!!
+	|-> Останалите запори към ЧСИ се въвеждат -> Payment method = "Normal deduction UNB"
+
+-  ->
+
+
+<<< НАМИРАНЕ НА GEID В SAP >>>
+1. it = 105
+2. All 
+3. Overview
+
+-  ->
+
+
+<<< ЕЖЕМЕСЕЧЕН РЕПОРТ - В ДЕНЯ НА ИЗПЛАЩАНЕ НА ЗАПЛАТИ КЪМ КОНТРОЛИНГА >>>
+
+	\\ R:\Payroll_and_PA\Rakovski\Reporting\04.2015\Controlling_report 2015.xlsx
+
+I.
+
+II.
+
+III.
+
+IV.
+V.
+VI.
+VII.
+VIII.
+
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+-  ->
+
+- КОЛОНИ ЗА Ф76 -> подготовка за репортинг
+- Sum-All  SA-MontWorkDays
+
+Sum-All = sum(колоните от всичко човеко дни + неявявания - без самоотлъчката)
+SA-MontWorkDays = колона Sum-All - работните дни за месеца
+
+- ПРАВИ СЕ ФАЙЛ = From_AttendanceFormSADays_forReport.xlsx - с колони = SAP; SA-MontWorkDays; CC
+В колона SAP се копират от всички форми влизащи в репорта всички САП номера (незабравяй после convert to numbers)
+В колона SA-MontWorkDays се копират от всички форми влизащи в репорта всички SA-MontWorkDays.
+
+
+<<< ВЪВЕЖДАНЕ В SAP НА OVERTIME СЪС ЗАПОВЕД >>>
+
+1. Намираме човека
+2. Въвеждаме дата на която е положен труда
+3. it 2010 Employee Remuneration Info
+	|-> wt 0110 Overtime - SAWT 50%	
+	|-> wt 0115 Overtime - weekdays 150%	
+	|-> wt 0116 Overtime - weekend 175%	
+	|-> wt 0120 Overtime - holiday 200%	
+4. Въвеждат се часовете + Save
+
+Note: Това е извънреден труд САМО СЪС ЗАПОВЕД от БП.!!! 
+-  ->
+-  ->
+-  ->
+
+
+<<< РАБОТА В ПРАЗНИЧНИ ДНИ SAP >>>
+1. Намираме човека
+2. it 2010 Employee Remuneration Info
+	|-> wt 0120 Overtime - holiday 200%
+3. Въвеждаме деня, за който се отнася и часовете.
+4. Save
+
+-  ->
+-  ->
+
+
+<<< ESAP/SOX Controls >>>
+
+- Прави се всеки месец за всички локации, като София, Петрич и Севлиево се правят заедно, а Раковски е отделно.
+- За София, Петрич и Севлиево дата = ПОСЛЕДЕН РАБОТЕН ДЕН ОТ МЕСЕЦА (когато е приключен периода)
+- За Раковски дата = 5-то - 8-мо число на месеца следващ този за който се отнасят.
+
+	-> R:\Payroll_and_PA\Sofia\SOX
+	-> SAP транзакция: Y_HR3_03000319
+
+I. In SAP:
+1. Y_HR3_03000319
+2. Period -> Избита се Периода от (1-во число на месеца) - до (дата на затваряне на периода - closing date)
+3. Selection -> Payroll area -> v.1 = B1,B3,B4 (all) ; v.2 = B2 
+	-> variant 1 = SOX_B1_B3_B4 SOX for locations ; variant 2 = SOX_B2 SOX for Rakovski
+4. Infotype selection -> Избират се един по един (за всеки се прави по отделно) БЕЗ -> 0001 Organizational assignment; 0935 Contract Elements BG; 2001 Absences. 
+5. Execute
+6. Layout selection (Ctrl+Shift+F6) (Третата икона от ляво на дясно) -> Избира се Layout според Infotype: Actions, ...
+7. Десен бутон на мишката + Spreadsheet -> in Excel
+8. Слагаме име на файла с "_OUT".
+
+II. On SERVER:
+1. R:\Payroll_and_PA\Sofia\SOX
+2. Оформят се -> R:\Payroll_and_PA\Sofia\SOX\for Printing
+3. Подписват се 
+4. Подписаните се преместват в -> R:\Payroll_and_PA\Sofia\SOX\Signed and Scanned
+
+
+<<< ЕЖЕМЕСЕЧЕН ОТЧЕТ ЗА ОСВОБОДЕНИТЕ - ХР.ЧИЧОВСКИ >>>
+
+1. От SAP -> (Transaction Y_HR_HRKXN - OLD Complex) Transaction Y_HR_BG_KX Master Komplex Report за месеца, за който се отнася.
+2. От него се трие всичко друго освен:
+	|-> Month, Year, PersNr, GEID, Surname, Name, CCtr, PA text, SAP login, Email, Office PhoneNr, EE Sgrp SAP, Leaving
+	|-> Select variant = BG IS Terminations.
+3. Филтър на Leaving и се оставят само тези, за който месец се отнася репорта (вс.друго се трие)
+4. Запис и email до Хр.Чичовски
+
+NOTE: Този репорт се прави в началото на всеки месец за предходния!
+ 
+-  ->
+
+
+<<< УДРЪЖКА ЗА НАДВИШЕНИ КОМАНДИРОВЪЧНИ >>>
+
+1. Получавам информацията от SAS за хората и сумите
+2. E-mail до BP със списък на хората да си напишат декларации, че са съгласни да им се удържат сумите.
+3. it 15
+	|-> wt 0830 - Individual Deductions 
+-> ЗА ДАТА СЕ ВЪВЕЖДА ПОСЛЕДЕН ДЕН НА МЕСЕЦА ИЛИ ПЪРВО ЧИСЛО. АКО ИМА ПОВЕЧЕ МЕСЕЦИ СЕ ВЪВЕЖДАТ НА ЕДИН ПЪТ СЪС СЪОТВЕТНИТЕ ДАТИ !!!
+
+4. 
+
+
+
+-  ->
+-  ->
+
+
+<<< Transaction - PU01 and PU03 >>>
+
+1. PU01 - Delete current payroll result
+	|-> за изтриване на последното изчисление и премахване на ретро акаунтинг в даден месец.
+	(ПРАВИ СЕ САМО ЗА ПОСЛЕДНИЯ ПЕРИОД ПРЕДИ ЗАТВАРЯНЕ НА ЗАПЛАТИТЕ !!!)
+	
+2. PU03 - Change payroll status
+	|-> Слага се дата за ретро мецеца на изчисление или предния.
+	|-> Променя се датата в полета: "Earl.pers. RA Date" ; "Earlest MD Change" and "Mast.data chng.bonus".
+
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction - ZHRPD01 - Staff assignments >>>
+
+- SAP Report for EEs and Divisions -> var. ALL_BG10_LOC. - FV and Payslips BG all loc.
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction Y_AB3_HRSM31_4 - Cost Centers - Groups >>>
+
+- Place in:
+	Personalistika -> Information System -> Configuration of HR -> HR-CO Complex Report -> Cost Centers - Groups
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction Y_HR_03000069 - Personnel Actions Overview >>>
+
+- SAP Report for EEs changes for selected period -> var. TEST_VC - TEST_VC (set from Viki)
+
+-  ->
+-  ->
+-  ->
+
+
+<<< PO13 - Maintain Position >>>
+
+- transaction is for:
+	-> relations between position of EE and Manager - ESS issue with Leaves !!! -> video manual have !!!
+	-> assignment of TASKS.
+	-> PPOME maintaining of positions assignment % 
+	-> 
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Attendance bonus >>>
+- Personalistika -> HR Imports -> BG Imports -> BG Attendance bonus
+	-> Ако 1,2,3-ти са ПОЧИВНИ ДНИ -> СТАРТ ОТ 1-Я РАБОТЕН ДЕН !!!
+	1. GET Variant за избор на Вариант за локация:
+		- ЗА ВС.ЛОКАЦИИ Обърни внимание на: Employee group = 1+9
+		- Petrich - Employee subgroup = B4; Employee group = 1+9
+	2. Първо тестово (отметка на Test only)
+	3. Ако всичко е ОК 
+	4. Махаме отметката на Test only.
+	5. Execute (F8)
+		
+
+-  ->
+
+
+<<< Transaction - Petrich data transfer >>>
+- PCBG -> Subsequent activities -> Per payroll period -> Petrich data transfer -> Petrich data transfer
+	-> Petrich Efficeincy data transfer - make after salaries.
+	1. Button "Payroll Period"
+	2. Payroll area = B3 + Enter
+	3. Execute
+	4. Right Icon - "Transport Data"
+	5. END
+
+Transaction name: Y_HR3_03000317 
+
+-  ->
+-  ->
+-  ->
+
+
+<<< SAP Access and Roles >>>
+
+1. Transaction PPOME:
+	- Търсим човек със същите права на достъп, които искаме да дадем и на друг - виждаме № на позицията (записваме си го)
+	- Търсим човека на когото искаме да дадем права - виждаме № на позицията (записваме си го) 
+
+2. Transaction PPPM:
+	2.1 Search Position - слагаме № на позицията на 1-я човек, за да видим правата, които има.
+	2.2 Във 2-ри прозорец отваряме нова Transaction PPPM и намираме позицията на 2-рия човек (на когото ще даваме права)
+	2.3 Даваме същите права и на него - виж видео " HRSC_KUser_How_To_Assign_SAP_AccessRoles_v1.mp4 " в C:\Users\BGBOVAR\Documents\Manuals\HR_Manuals\MANs_for_Managers
+
+3. Transaction ZADRP:
+	3.1 Слагаме UserName/AD-UserName на човека на когото ще даваме права (виж в Transaction PA20 - it105) 
+	3.2 Виждаме новите права най от долу в зелен цвят. Маркираме едно по едно и даваме Assign.
+	3.3 На всяко право отваряме "Detail" за да извадим PDF документа за попълване.
+		info: На "Owners" можем да видим кой е човека, който ще одобрява правата.
+	3.4 Изпращаме PDF документа за подпис от човека, на който ще даваме права. Даго подпише и върне сканиран в PDF.
+	3.5 Получените подписани и сканирани документи слагаме в " R:\HR_ServiceCenter\MSS " в папка с името на човека - всеки документ с името на правото.
+	3.6 Към всяко право отваряме "Detail" и прикачваме получения подписан PDF и слагаме отметка на "SAP Driving license attached" + OK/Save
+
+INFO: 
+- видео " HRSC_KUser_How_To_Assign_SAP_AccessRoles_v1.mp4 " в C:\Users\BGBOVAR\Documents\Manuals\HR_Manuals\MANs_for_Managers	
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction SU3 (setups - Maintain User Profile) >>>
+
+- This is transaction for the most important user settings as language, printer etc. 
+
+Case:
+If User have assigned all needed rights and still have not working transactions (PA40,PA30, PPOME ...) then:
+	-> Run SU3 and fill missing parameters to SAP profile - add these records into tab Parameters:
+		-- MOL = BG ; UGR = BG ;  
+	-> Or run Transaction o037 and select Bulgaria country grouping.
+
+Case:
+If user can't make search by name (=LastName.FirstName) and SAP return error message to be entered only numeric values 
+	-> problem is that for user are not filled language and printer (the most important setting in SU3)
+	
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Assign Wage Types - Display G/L Accounts >>>
+
+- To view all Wage Types for which G/L Account is assigned.
+
+Transaction: PC00_M99_DKON
+Transaction text: Assign WTS- Display G/L Accounts
+Area menu: PCBG
+Variant: BG - BG variant
+
+Place: PCBG -> Tools -> Customizing Tools -> Wage Type Assignment - Display G/L Accounts
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction PA70 Fast Entry >>>
+
+- This Transaction is for mass records delimit.
+- View MAN/Tutorial -> BG10_HRSC_Mass_Records_Delimit.mp4 in https://abb.sharepoint.com/sites/PayrollandPersonnelAdministrationBGandRO/Shared%20Documents/HR%20SAP%20MANUALS%20and%20TUTORIALS/Video%20Manuals%20and%20Tutorials
+For example: Delimiting of Food Vouchers in it14
+
+-  ->
+-  ->
+-  ->
+
+
+<<< Transaction SBWP - SAP Business Workplace >>>
+
+- This transaction is for opening SAP Business Workplace. 
+- SAP Business Workplace is the place in which we receive requests for approving or emailed directly from SAP Documents or Reports.
+- SAP Business Workplace is the place in which HRSC or HRBP will receive change requests for approving from ESS/MSS Portal (Change Management System). 
+- This is the step 2 after request is made from Portal before to be transferred in to the HR SAP.  
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+<<<  >>>
+
+-  ->
+-  ->
+-  ->
+
+
+

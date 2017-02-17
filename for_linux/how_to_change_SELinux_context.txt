@@ -1,0 +1,22 @@
+﻿how to change SELinux context
+
+https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security-Enhanced_Linux/sect-Security-Enhanced_Linux-Working_with_SELinux-SELinux_Contexts_Labeling_Files.html
+
+
+Type ls -Z against your file and ensure the SELinux context is:
+
+for authorized_keys file must be -> unconfined_u:object_r:ssh_home_t:s0. 
+
+If it is not correct, fix it!
+
+Command to change the type to ssh_home_t. The -t option only changes the type.
+
+#chcon -t ssh_home_t authorized_keys 
+
+
+NOTE - Example:
+[user@host /dir1/dir2/.ssh]# ls -Z authorized_keys
+-rw-r--r--. user user unconfined_u:object_r:home_root_t:s0 authorized_keys
+
+
+

@@ -1,0 +1,41 @@
+﻿How to access Shared folder on HOST OS from Guest OS:
+
+1. Mount Host Shared Folder on VBox Settings Manager.
+2. Start VMachine and log as root.
+3. Make some folder for mounting of Host Shared Folder.
+4. Go to VM menu - Devices and Insert Guest Additions CD.
+5. Open Konsole and go to Guest Additions CD: 
+	# cd /run/media/root/VBOXADDITIONS_4.3.20_96996/
+after that install Guest Additions:
+	# sh ./VBoxLinuxAdditions.run
+
+Note:
+If kernel modules Failed probably you have a notice for errors and how to fix it.
+Fix error and run again command "sh ./VBoxLinuxAdditions.run"
+
+6. To mount folder in system run command: 
+	# mount -t vboxsf [-o OPTIONS] sharename mountpoint
+example:
+	# mount -t vboxsf vBox_sh /home/SomeUser/Downloads/WinShr
+
+To mount a shared folder during boot, add the following entry to "/etc/fstab":
+
+	# sharename   mountpoint   vboxsf   defaults  0   0
+example:
+	# vBox_sh /home/SomeUser/Downloads/WinShr vboxsf defaults 0 0
+
+7. That's It!
+
+Notes:
+1. If you are not root you must make your user a member of group "vboxsf" and log off and log on
+2. If you want to Uninstalling the Linux Guest Additions in "/run/media/root/VBOXADDITIONS_4.3.20_96996/" run command:
+	# sh ./VBoxLinuxAdditions.run uninstall
+
+3. If you don't want to mount a shared folder during boot, you may make some aliase in .bashrc file:
+	# aliase SomeName='mount -t vboxsf sharename mountpoint'
+some example:
+	# aliase winmnt='mount -t vboxsf vBox_sh /home/SomeUser/Downloads/WinShr'
+
+
+
+

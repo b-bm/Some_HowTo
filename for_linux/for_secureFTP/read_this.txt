@@ -1,0 +1,72 @@
+some thing about bash -> https://wiki.archlinux.org/index.php/Color_Bash_Prompt
+
+how_to_setup_owncloud_tutorials - > https://www.youtube.com/watch?v=5yn-1ZrhiS4
+
+some thing about proftpd.config problems:
+
+http://tech-stepbystep.blogspot.com/2012/02/directory-listing-timeout-with-proftpd.html
+	|-> It turned out to be some modules missing in the server, needed to assure the right support for passive ftp connection.
+	    I just add to edit /etc/sysconfig/iptables-config to make sure it was loading ip_conntrack_ftp and ip_conntrack_tftp:
+	    # IPTABLES_MODULES="ip_conntrack_netbios_ns ip_conntrack_ftp ip_conntrack_tftp"
+	    I then restarted iptables with:
+	    /etc/init.d/iptables restart
+	    And now I can access my files using any FTP client (at least it works with FileZilla )
+
+http://www.proftpd.org/docs/howto/Limit.html
+
+	<Directory /*>
+		<Limit ALL>
+	      AllowAll
+		</Limit>
+		<Limit DIRS>
+	      AllowAll
+		</Limit>
+		<Limit READ>
+	      AllowAll
+		</Limit>
+		<Limit WRITE>
+		  AllowAll
+		</Limit>
+	</Directory>
+	<Limit ALL SITE_CHMOD>
+	  AllowAll
+	</Limit>
+
+http://www.proftpd.org/docs/howto/FTP.html
+http://www.proftpd.org/docs/howto/Directory.html
+
+http://www.proftpd.org/docs/configs/mysql_simple.conf
+	 
+	# It is a very good idea to allow only filenames containing normal
+	# alphanumeric characters for uploads (and not shell code...)
+	#PathAllowFilter "^[a-zA-Z0-9_.-]()'+$"
+	#PathAllowFilter "^[a-zA-Z0-9 _.-]()'+$"
+
+	# We don't want .ftpaccess or .htaccess files to be uploaded
+	#PathDenyFilter "(\.ftp)|(\.ht)[a-z]+$"
+	#PathDenyFilter "\.ftp[a-z]+$"
+
+	# Do not allow to pass printf-Formats (security! see documentation!):
+	#AllowFilter "^[a-zA-Z0-9@~ /,_.-]*$"
+	#DenyFilter  "%"
+	
+/etc/pam.d/proftpd
+
+#%PAM-1.0
+#session    optional     pam_keyinit.so force revoke
+#auth       required     pam_listfile.so item=user sense=deny file=/etc/ftpusers onerr=succeed
+#auth       required     pam_shells.so
+#auth       include      pam_unix.so
+#account    include      pam_unix.so
+#session    required     pam_loginuid.so
+#session    include      pam_unix.so
+
+auth       required     /lib/security/pam_listfile.so item=user sense=deny file=/etc/ftpusers onerr=succeed
+auth       required     /lib/security/pam_unix.so shadow nullok
+account    required     /lib/security/pam_unix.so
+session    required     /lib/security/pam_unix.so
+
+
+
+
+

@@ -1,0 +1,17 @@
+﻿I use a script I title idle.vbs:
+
+Dim objResult
+
+Set objShell = WScript.CreateObject("WScript.Shell")    
+i = 0
+
+Do While i = 0
+  objResult = objShell.sendkeys("{NUMLOCK}{NUMLOCK}")
+  Wscript.Sleep (6000)
+Loop
+
+Every six seconds, this quickly toggles numlock on the keyboard.
+This causing Windows to believe that someone is interacting with the keyboard and preventing screen lock. 
+This runs on vanilla windows, you don't need development or scripting tools to use it. 
+Just make a text file with .vbs as the extension and double-click it (or place it in your startup items).
+

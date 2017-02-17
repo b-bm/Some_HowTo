@@ -1,0 +1,36 @@
+﻿HOW TO REMOVE PASSWORD PROTECTION FROM EXCEL FILE
+
+!!! ONLY FOR PASSWORD PROTECTED SHEETS IF THE DOCUMENT IS PASSWORD PROTECTED - NOTHING TO DO, SORRY !!!
+
+I have used this method on a 2007 to 2013 *.xlsx files.
+
+Excel 2007 - 2013 Password Removal 
+
+1. Create backup of password-protected excel file.
+2. Change the file extension to .zip from .xlsx.
+3. Open zip file or extract the whole content of zip file.
+4. Search for xml format of targeted sheet. You will find it in 'xl -> worksheets' directory.
+5. Open the xml file of targeted sheet in xml/txt editor (notepad++).
+6. Now search for 'sheetProtection' word in that xml file and remove it with all 'protectedRanges'.
+7. Save this edited xml file and replace old xml with this new file in zip file. Close/Save the zip file.
+8. Now change the extension from .zip to .xlsx.
+
+End. That's all :)
+
+===========================================================================================================
+
+!!! МЕТОДЪТ Е САМО ЗА ЗАЩИТЕНИ С ПАРОЛА ШИЙТОВЕ НЕ СТАВА ЗА ЗАЩИТЕНИ С ПАРОЛА ФАЙЛОВЕ т.е. АКО ФАЙЛА МОЖЕ ДА СЕ ОТВОРИ БЕЗ ПАРОЛА !!!
+
+Методът работи за 2007 до 2013 *.xlsx файлове.
+
+1. Направете резервно копие на Excel файла.
+2. Сменете разширението на файла от .xlsx на .zip.
+3. Отворете zip файла или направете екстракт на цялото съдържание на zip файла.
+4. Намерете xml файла за търсения шийт. Може да се открие в директория 'xl -> worksheets'.
+5. Отворете xml файла за търсения шийт с предпочитан редактор.
+6. Намерете 'sheetProtection' и всички 'protectedRanges' и ги изтрийте.
+7. Запазете промените и заменете в zip файла стария xml файл с новия. Затворете и запазете промените в zip файла.
+8. Сега сменете разширението от .zip в .xlsx
+
+Това е всичко. :)
+

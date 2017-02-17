@@ -2,6 +2,8 @@
 :: IPCONFIG /ALL
 :: PING some IP
 :: and print some texts
+:: Author: nighthawk - bgbovar
+:: ver.:
 
 ::Start Code
 
@@ -11,10 +13,9 @@ TITLE This is some simple FAST Task File.
 ECHO OFF
 ::CMD will no longer show us what command it’s executing(cleaner)
 
-ECHO *** As a admin, I'm lazy man and I'm tired to type these commands often! 
-Echo *** Hopefully, this saves me some time in the long run.
-ECHO *** This is small command file for automation on some commands!
-echo **********************************************************************
+ECHO As a network admin, I'm getting tired of having to type these commands in! 
+Echo Hopefully, this saves me some time in the long run.
+ECHO This is small command file for automation on some commands!
 :: Print some text
 
 PAUSE
@@ -24,22 +25,12 @@ IPCONFIG /ALL
 :: Outputs tons of network information into the command prompt
 PAUSE
 :: Lets the user read the important information
-PING 46.35.170.12
-:: Ping my IP - my new n3 real IP
-::PING 85.187.248.24
-:: Ping my IP - my old visio-evronet IP
 
-ECHO All done pinging My IP.
+PING www.google.com
+:: Ping google to figure out if we’ve got internet!
+
+ECHO All done pinging Google.
 ::Print some text
-
-::PING 
-:: Ping my Internet Provider IP - n3
-::PING 80.72.72.164
-:: Ping my Internet Provider IP - old visio-evronet
-
-ECHO *** All done pinging My IP's. ***
-::Print some text
-
 
 ECHO ************************************************ 
 ECHO ************************************************

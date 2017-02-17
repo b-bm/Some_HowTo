@@ -3,4 +3,37 @@
 
 Convert aac to mp3 with ffmpeg:
 
-ffmpeg -i audio.aac -acodec libmp3lame audio.mp3
+    $ ffmpeg -i audio.aac -acodec libmp3lame audio.mp3
+
+
+Convert mp4 to mp3 with ffmpeg:
+
+For FFmpeg with Constant Bitrate Encoding (CBR):
+
+    $ ffmpeg -i video.mp4 -vn \
+       -acodec libmp3lame -ac 2 -ab 160k -ar 48000 \
+        audio.mp3
+
+or if you want to use Variable Bitrate Encoding (VBR):
+
+    $ ffmpeg -i video.mp4 -vn \
+       -acodec libmp3lame -ac 2 -qscale:a 4 -ar 48000 \
+        audio.mp3
+
+The VBR example has a target bitrate of 165 Kbit/s with a bitrate range of 140...185.
+
+Description
+
+   -i        input file name
+   -vn       disable video recording
+   -acodec   force audio codec to libmp3lame
+   -ac       set the number of audio channels
+   -ar       set the audio sampling frequency
+
+
+The following command will extract audio from our sample media file foo.mp4 and convert it to MP3 file named bar.mp3:
+
+    $ ffmpeg -i foo.mp4 bar.mp3
+
+
+ffmpeg -i "file.mp4" "file.mp3"; ffmpeg -i "" ""

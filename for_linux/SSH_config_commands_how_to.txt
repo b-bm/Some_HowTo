@@ -20,7 +20,7 @@ set this off:
 
 # vim /etc/ssh/sshd_config
 
-$ ssh-keygen -t rsa 8192 or dsa 1024 or ecdsa 512
+$ ssh-keygen -t rsa 8192 or dsa 1024 or ecdsa 521
 
 $ chmod 755 ~/.ssh
 

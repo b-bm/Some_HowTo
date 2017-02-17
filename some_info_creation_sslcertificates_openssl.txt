@@ -1,0 +1,19 @@
+﻿some info about creation of ssl certificates with openssl:
+
+
+http://php.net/manual/en/function.openssl-sign.php
+
+https://www.madboa.com/geek/openssl/
+
+http://techglimpse.com/sha256-hash-certificate-openssl/
+
+http://wiki.openssl.org/index.php/Command_Line_Utilities
+
+
+for windows:
+http://www.trycatchfinally.net/2011/05/generate-an-x509-certificate-with-an-sha256-signature-hash/
+
+
+
+
+

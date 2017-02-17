@@ -1,0 +1,9 @@
+#!/bin/bash
+
+service sshd status > service_sshd_status_$(hostname)-$(date +%Y-%m-%d-%H-%M).txt
+service proftpd status > service_proftpd_status_$(hostname)-$(date +%Y-%m-%d-%H-%M).txt
+
+
+
+
+

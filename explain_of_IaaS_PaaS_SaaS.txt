@@ -1,0 +1,14 @@
+﻿IaaS, PaaS, SaaS (Explained)
+
+- SaaS: Software as a Service
+SaaS Examples: Google Gmail, Microsoft 365, Salesforce, Citrix GoToMeeting, Cisco WebEx
+Common SaaS Use-Case: Replacing traditional on-device software
+
+- PaaS: Platform as a Service
+Common PaaS Use-Case: Increase developer productivity and utilization rates and decrease an application’s time-to-market
+
+- IaaS: Infrastructure as a Service
+IaaS Examples: Amazon Web Service (AWS), Microsoft Azure, Google Compute Engine (GCE)
+
+
+

@@ -1,0 +1,34 @@
+Firestarter GUI for advanced Firewall:
+
+http://www.tecmint.com/firestarter-a-high-level-graphical-interface-iptables-firewall-for-linux-systems/
+http://www.fs-security.com/
+
+How to instal and setup:
+
+On RHEL/CentOS/Fedora
+Firestarter packages available in RPM package format for your RPM based Linux distributions like Red Hat, CentOS and Fedora. 
+Therefore, download the latest stable RPM package specific to your distribution using below link.
+
+	http://www.fs-security.com/download.php
+
+Once, you’ve downloaded the package, open a terminal and change to the directory where you downloaded the RPM and type the following command to install the package.
+
+	# rpm -Uvh firestarter*rpm
+
+Compiling and Installing from Source
+First, download the tar.gz version using the wget command. 
+Unpack the tarball using tar command and move into the newly created directory and then configure, compile and install it as shown below.
+
+	# wget http://kaz.dl.sourceforge.net/project/firestarter/firestarter/1.0.3/firestarter-1.0.3.tar.gz
+	# tar -xvf firestarter-1.0.3.tar.gz
+	# cd firestarter-1.0.3
+	# ./configure --sysconfdir=/etc
+	# make
+	# make install
+
+
+====================================================================================================================================================
+
+http://wiki.centos.org/TipsAndTricks#head-5e67d4b9135f334022c4eb69a9406763a44e5fed
+http://wiki.centos.org/HowTos
+

@@ -1,0 +1,58 @@
+How to install skype on Fedora 22/21
+
+http://www.if-not-true-then-false.com/2012/install-skype-on-fedora-centos-red-hat-rhel-scientific-linux-sl/
+
+
+1.
+dnf install alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686
+
+or
+
+dnf install alsa-lib.i686 fontconfig.i686 freetype.i686 \
+glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 \
+libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 \
+pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686 qtwebkit.i686
+
+2.
+cd /tmp
+ 
+## Skype 4.3 Dynamic for Fedora/CentOS/RHEL/SL ##
+wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic
+
+3.
+mkdir /opt/skype
+ 
+## Extract Skype 4.3 ##
+tar xvf skype-4.3* -C /opt/skype --strip-components=1
+
+4.
+ln -s /opt/skype/skype.desktop /usr/share/applications/skype.desktop
+ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png
+ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png
+ 
+touch /usr/bin/skype
+chmod 755 /usr/bin/skype
+
+5.
+Open /usr/bin/skype with text editor and add following content:
+
+#!/bin/sh
+export SKYPE_HOME="/opt/skype"
+ 
+$SKYPE_HOME/skype --resources=$SKYPE_HOME $*
+
+If you you have problems to use command line editors, like vi/vim, nano, emacs, pico, joe, etc. then copy and paste following lines (exatcly) to terminal to create /usr/bin/skype file.
+
+cat << EOF > /usr/bin/skype
+#!/bin/sh
+export SKYPE_HOME="/opt/skype"
+ 
+\$SKYPE_HOME/skype --resources=\$SKYPE_HOME \$*
+EOF
+
+6.
+From command line use skype command:
+skype
+
+DONE
+

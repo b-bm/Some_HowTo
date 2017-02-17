@@ -1,0 +1,18 @@
+Some problem with Joomla Data Base - db freeze when install joomla:
+
+This problem occurring most usually at Joomla 3.x. and Joomla 2.5.xx To solve this go to: 
+
+	xampp\htdocs\Your joomla folder\installation\sql\mysql 
+
+and open Joomla.sql file find the term
+
+	"ENGINE=InnoDB"
+
+and replace ALL with
+
+	"ENGINE=MyIsam"
+
+MyIsam is more supported and compatible with Joomla.
+
+Do also the same with (sample_data.sql) file, if it's quickstart setup.
+

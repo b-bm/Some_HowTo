@@ -1,0 +1,21 @@
+﻿How to make collection of 2,3 or more columns in one:
+
+info:
+You can combine or merge text from two or more cells into one cell. 
+For example, if you have one cell in your worksheet with a person’s first name and one cell with their last name, you can combine the first and last names together in a new cell.
+
+- var.1.use this formula:
+
+	=CONCATENATE(B:B;" ";C:C;" ";D:D)
+
+- var.2.use this formula:
+
+	=(A2&" "&B2)
+    
+1.Click the cell where you want to put the combined text.
+2.Type =(
+3.Click the cell that contains the first text you want to combine, such as a person’s first name.
+4.Type &” “& (a space enclosed in quotation marks).
+5.Click the next cell with the text that you want to combine, such as the person’s last name.
+
+	

@@ -30,7 +30,7 @@ Detailed Steps:
 
 1. Launch Notepad and open the hosts file located at C:\windows\system32\drivers\etc\hosts. 
 (You may not be able to see the windows folder–some files are hidden by default under Windows.
-On Vista, you’ll also need to have access to change the hosts file. 
+On Vista,7 and 8 you’ll also need to have administrator access to change the hosts file. 
 To do that, launch Notepad by right clicking on Notepad from the Start menu and choosing "Run As Administrator." 
 This will give you permission to edit and save the file.
 
@@ -41,6 +41,13 @@ The second part (clientA.local) is the "domain" of the virtual host.
 To visit this domain in a Web browser you’d type http://clientA.local. 
 You don’t have to add the .local part to the hosts files—you could just as easily add 127.0.0.1 clientA and access the site in your Web browser with http://clientA 
 — but I find it helpful for differentiating between a real Web site out on the Internet like clientA.com, and the test sites I have running on my own computer.
+
+2.1. To access vHosts FROM ANOTHER COMPUTER ON LOCAL NETWORK (example: SomePC2) you may edit hosts file on this computer SomePC2:
+In hosts file on computer SomePC2 you must add local IP of computer that host vHost site and website domain. 
+At the end of that file type something like this:
+
+# To access vHost on local network
+192.168.1.xxx SomeThing.local
 
 3. Save and close the hosts file.
 That finishes the first part of this task. 
@@ -88,12 +95,12 @@ If you want to add additional Virtual hosts add the proper entry to the hosts fi
 For example, say you had another Web site for ClientB. 
 You’d add 127.0.0.1    clientB.local in the hosts file and the C:\xampp\apache\conf\extra\httpd-vhosts.conf would look like this:
 
-	NameVirtualHost *
-	  <VirtualHost *>
+	NameVirtualHost *:80
+	  <VirtualHost *:80>
 		DocumentRoot "C:\xampp\htdocs"
 		ServerName localhost
 	  </VirtualHost>
-	  <VirtualHost *>
+	  <VirtualHost *:80>
 		DocumentRoot "C:\Documents and Settings\Me\My Documents\clientA\website"
 		ServerName clientA.local
 	  <Directory "C:\Documents and Settings\Me\My Documents\clientA\website">
@@ -101,7 +108,7 @@ You’d add 127.0.0.1    clientB.local in the hosts file and the C:\xampp\apache
 		Allow from all
 	  </Directory>
 	</VirtualHost>
-	<VirtualHost *>
+	<VirtualHost *:80>
 		DocumentRoot "C:\Documents and Settings\Me\My Documents\clientB\website"
 		ServerName clientB.local
 	  <Directory "C:\Documents and Settings\Me\My Documents\clientB\website">
@@ -113,4 +120,5 @@ You’d add 127.0.0.1    clientB.local in the hosts file and the C:\xampp\apache
 
 
 
-
+	
+	

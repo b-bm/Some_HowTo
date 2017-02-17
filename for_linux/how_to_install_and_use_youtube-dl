@@ -1,0 +1,10 @@
+how to install:
+
+    # dnf install youtube-dl  
+
+youtube-dl options:
+
+youtube-dl -F URL -> shows video resolution
+
+youtube-dl -f(number of resolution) URL -> downloading video in choosen resolution
+

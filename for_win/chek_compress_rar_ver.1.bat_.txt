@@ -1,0 +1,129 @@
+﻿@echo off
+
+Title compress_rar_rev1a.bat
+
+REM updated 10/22/2014
+
+REM This script compresses files in a folder specified by the user individually 
+REM or in a single archive in *.rar format (WinRAR's default) with the option to 
+REM include subfolders. Saved files are placed in the deafault directory 
+REM specified below unless otherwise noted. Note: files with the same name 
+REM but with different extensions will be in the same archive.
+
+setlocal
+
+REM Specify the folder to compress below:
+
+REM -------------------------------- Folder to compress-------------------------
+set dir=F:\Utilities\Batchfiles\sync_comptb_batchfiles
+REM ----------------------------------------------------------------------------
+
+REM change to directory
+cd %dir%
+
+REM Path to WinRAR executable in Program Files
+set path="C:\Program Files\WinRAR\";%path%
+
+REM Replace space in hour with zero if it's less than 10
+SET hr=%time:~0,2%
+IF %hr% lss 10 SET hr=0%hr:~1,1%
+
+REM This sets the date like this: mm-dd-yr-hrminsecs1/100secs
+Set TODAY=%date:~4,2%-%date:~7,2%-%date:~10,4%-%hr%%time:~3,^
+2%%time:~6,2%%time:~9,2%
+
+echo.
+echo Folder to compress in *.RAR format:
+echo %dir%
+echo.
+echo.
+
+echo 1. Compress files in dir individually (no subdirs)
+echo 2. Compress files in dir and subdirs individually
+echo 3. Compress all files in dir into a single archive (no subdirs)
+echo 4. Compress all files in dir and subdirs into a single archive
+echo 5. Compress all files in dir and subdirs into a single archive - no paths
+echo 6. Compress all files WITHIN dir and subdirs individually - no paths
+echo 7. Exit
+echo.
+echo.
+:choose
+set PROFILE=
+set /P PROFILE=Enter your selection (1-7):
+if "%PROFILE%"=="1" goto indiv
+if "%PROFILE%"=="2" goto sindiv
+if "%PROFILE%"=="3" goto onearc
+if "%PROFILE%"=="4" goto sonearc
+if "%PROFILE%"=="5" goto snponearc
+if "%PROFILE%"=="6" goto wsindiv
+if "%PROFILE%"=="7" goto nochoice
+goto choose
+
+REM Compress files in directory individually (no subdirectories)
+:indiv
+echo.
+echo.
+FOR %%i IN (*.*) do (
+rar a "%%~ni" "%%i"
+)
+goto eof
+
+REM Compress files in directory and subdirectories individually
+:sindiv
+echo.
+echo.
+for /R %%b IN (*.*) do (rar a "%%~nb" "%%b" )
+)
+goto eof
+
+REM Compress all files in directory into a single archive (no subdirectories)
+:onearc
+echo.
+echo.
+echo Today's date and time will be added to the base filename
+set /P name=Enter base filename for archive:
+rar a "%name%_%today%" 
+goto eof
+
+REM Compress all files in directory and subdirectories into a single archive
+:sonearc
+echo.
+echo.
+echo Today's date and time will be added to the base filename
+set /P name=Enter base filename for archive:
+rar a -r "%name%_%today%" 
+goto eof
+
+REM Compress all files in dir and subdirs into a single archive - no paths
+:snponearc
+echo.
+echo.
+echo Today's date and time will be added to the base filename
+set /P name=Enter base filename for archive:
+rar a -r -ep "%name%_%today%" 
+goto eof
+
+REM Compress all files within dir and subdirs - no paths
+:wsindiv
+echo.
+echo.
+FOR /R "%dir%" %%i IN (*.*) do (rar a -ep "%%~pi\%%~ni" "%%i")
+goto eof
+
+:nochoice
+echo.
+echo.
+echo No selection made - script exited
+:eof
+
+endlocal
+
+echo.
+echo "Task Completed"
+echo.
+
+pause
+
+REM --------------------------- exit -----------------------------------------
+:end
+EXIT /B 0

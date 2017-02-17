@@ -5,4 +5,9 @@ Installing RPMFusion:
 sudo rpm -Uvh http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm
 
 
+RPMFusion - fedora 20-1 x86-64:
+rpm -Uvh http://download1.rpmfusion.org/free/fedora/releases/20/Everything/x86_64/os/rpmfusion-free-release-20-1.noarch.rpm
+
+rpm -Uvh http://download1.rpmfusion.org/nonfree/fedora/releases/20/Everything/x86_64/os/rpmfusion-nonfree-release-20-1.noarch.rpm
+
 

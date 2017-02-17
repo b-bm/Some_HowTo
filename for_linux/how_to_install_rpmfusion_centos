@@ -1,0 +1,57 @@
+﻿Instal RPMFusion - Fedora 22 and later:
+
+dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+===================================================================================================================
+Instal RPMFusion - FEDORA 20-1 x86-64:
+
+  rpm -Uvh http://download1.rpmfusion.org/free/fedora/releases/20/Everything/x86_64/os/rpmfusion-free-release-20-1.noarch.rpm
+
+  rpm -Uvh http://download1.rpmfusion.org/nonfree/fedora/releases/20/Everything/x86_64/os/rpmfusion-nonfree-release-20-1.noarch.rpm
+
+Install the Remi Repository On Fedora 20  i386 or x86_64:
+
+  rpm -Uvh http://rpms.famillecollet.com/remi-release-20.rpm
+  
+https://fedoraproject.org/wiki/EPEL
+
+
+===================================================================================================================
+Instal RPMFUSION on CentOS 7:
+
+1. Install the EPEL Repository
+	rpm -Uvh http://mirrors.kernel.org/fedora-epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+
+2. Install the Remi Repository
+	rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+
+3. Install RPMFUSION Repository
+
+	rpm -Uvh http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
+	rpm -Uvh http://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+
+OR
+	yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm http://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+
+
+===================================================================================================================
+Instal RPMFUSION on CentOS 6.5:
+
+1.
+## Install EPEL repository for RHEL/CentOS 6.5/6.4/6.3/6.2/6.1/6.0 ##
+# wget Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+# rpm -Uvh epel-release-6-8.noarch.rpm
+
+2.
+## Install Remi repository for RHEL/CentOS 6.5/6.4/6.3/6.2/6.1/6.0 ##
+# wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+# rpm -Uvh remi-release-6.rpm
+
+3.
+wget http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
+rpm -Uvh rpmfusion-free-release-6-1.noarch.rpm
+
+wget http://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+rpm -Uvh rpmfusion-nonfree-release-6-1.noarch.rpm
+
+

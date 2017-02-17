@@ -1,0 +1,36 @@
+﻿How to delete empty rows in Excel:
+
+Type I:
+
+1. Select your data
+	- Find & Select -> Go to Special... -> select "Blanks" -> OK 
+2. Delete Rows
+	- Delete Sheet Rows
+
+That is all
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Type II:
+
+1. Select your data
+2. Press F5
+	This opens “Go to” dialog in Excel. Now hit on that “select” button.
+	From “select special” screen, select “Blanks”
+	Now, all the blank cells will be selected.
+	Just press CTRL and Minus sign (-)
+	Select “shift cells up” or “entire row” as needed.
+
+That is all. Now you have successfully removed blank rows.
+
+Bonus tip:
+If you are looking for keyboard short-cut for this, here it is. Press them in the same order once you select the cells.
+
+	F5 ALT+s k Enter CTRL+ – u Enter
+
+=========================================================================================================================
+
+
+
+
+

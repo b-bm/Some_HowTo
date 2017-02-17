@@ -1,0 +1,22 @@
+﻿HowTo: 
+
+Run the .sh File Shell Script In Linux / UNIX
+
+	# sh file.sh
+OR
+	# bash file.sh
+	$ sudo bash filename.sh
+
+
+Начало на bash скрипт -> #!/bin/bash
+
+With this command we created *.txt file whit info from services in som directory:
+
+	# service sshd status > service_sshd_status_$(hostname)-$(date +%Y-%m-%d-%H-%M).txt
+
+	# service proftpd status > service_proftpd_status_$(hostname)-$(date +%Y-%m-%d-%H-%M).txt
+
+
+
+
+

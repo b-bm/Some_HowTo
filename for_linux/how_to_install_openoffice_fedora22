@@ -1,0 +1,34 @@
+How to Install Apache OpenOffice 4.1.1 on Fedora 22/21
+
+http://www.if-not-true-then-false.com/2010/install-openoffice-org-on-fedora-centos-red-hat-rhel/
+
+1.
+wget http://sourceforge.net/projects/openofficeorg.mirror/files/4.1.1/binaries/en-US/Apache_OpenOffice_4.1.1_Linux_x86-64_install-rpm_en-US.tar.gz/download -O Apache_OpenOffice_4.1.1_Linux_x86-64_install-rpm_en-US.tar.gz
+
+2.
+yum remove openoffice* libreoffice*
+
+3.
+tar -xvf Apache_OpenOffice_4.1.1*
+ 
+cd en-US
+
+4.
+Add exclude row to /etc/yum.conf file, under the section [main]:
+
+## Edit file
+nano -w /etc/yum.conf
+ 
+## Add exclude row
+[main]
+exclude=openoffice.org-ure* libreoffice-ure*
+ 
+5.
+rpm -Uvh RPMS/*.rpm RPMS/desktop-integration/openoffice4.1.1-redhat-*.rpm
+
+6.
+Start openoffice
+openoffice4 
+
+
+DONE
